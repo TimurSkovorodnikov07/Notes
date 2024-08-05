@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+*{
+  background-color: #282c34;
+  color: white;
+}
+.App-header {
+  font-size: calc(15px + 2vmin);
+}
+.App-body{
+  font-size: calc(5px + 2vmin);
+  text-align: center;
+}
+.App-footer {
+  font-size: calc(1px + 2vmin);
+}
+:link {
+  color: #61dafb;
+}
+
+.clickable-text
+{
+  color: #61dafb;
+}
+.error
+{
+  color: red;
+}

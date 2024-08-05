@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b005f9f6-8146-40a1-88b5-ade4987400ac" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="2k8tcd9I99TBjd6gZUBaBSLIjI7" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b005f9f6-8146-40a1-88b5-ade4987400ac" name="Default Changelist" comment="" />
+      <created>1722677111358</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1722677111358</updated>
+      <workItem from="1722677114902" duration="4547000" />
+    </task>
+    <servers />
+  </component>
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="WindowStateProjectService">
+    <state x="424" y="233" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1722677132060">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="424" y="233" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1722677132060" />
+    <state width="498" height="398" key="SwitcherDM" timestamp="1722682084883">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="498" height="398" key="SwitcherDM/0.0.1920.1080@0.0.1920.1080" timestamp="1722682084883" />
+  </component>
+</project>

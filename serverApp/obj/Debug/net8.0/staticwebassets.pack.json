@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/favicon.ico",
+      "PackagePath": "staticwebassets/favicon.ico"
+    },
+    {
+      "Id": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/favicon.jpg",
+      "PackagePath": "staticwebassets/favicon.jpg"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.FullstackApp1.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.FullstackApp1.props",
+      "PackagePath": "build\\FullstackApp1.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.FullstackApp1.props",
+      "PackagePath": "buildMultiTargeting\\FullstackApp1.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.FullstackApp1.props",
+      "PackagePath": "buildTransitive\\FullstackApp1.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

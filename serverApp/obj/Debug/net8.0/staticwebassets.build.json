@@ -1,0 +1,58 @@
+{
+  "Version": 1,
+  "Hash": "H3eArgeACQGN+hT0miz/KiYI39hkxiJKuTp36PIFjNY=",
+  "Source": "FullstackApp1",
+  "BasePath": "_content/FullstackApp1",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "FullstackApp1/wwwroot",
+      "Source": "FullstackApp1",
+      "ContentRoot": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/",
+      "BasePath": "_content/FullstackApp1",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/favicon.ico",
+      "SourceId": "FullstackApp1",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/",
+      "BasePath": "_content/FullstackApp1",
+      "RelativePath": "favicon.ico",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/favicon.ico"
+    },
+    {
+      "Identity": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/favicon.jpg",
+      "SourceId": "FullstackApp1",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/",
+      "BasePath": "_content/FullstackApp1",
+      "RelativePath": "favicon.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/favicon.jpg"
+    }
+  ]
+}
