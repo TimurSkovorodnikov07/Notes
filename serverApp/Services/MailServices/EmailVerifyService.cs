@@ -37,7 +37,7 @@ public class EmailVerifyService : IEmailVerify
         string title = _options.EmailMessageTitle;
         string htmlBody = _options.EmailMessageHtmlBody.Replace("{CODE}", code.ToString());
 
-        _logger.LogInformation("The message was sent to email: " + email);
+        _logger.LogDebug("The message was sent to email: " + email);
         await _emailSend.SendAsync(email, title, htmlBody);
     }
 

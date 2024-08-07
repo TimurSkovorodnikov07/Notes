@@ -1,8 +1,9 @@
-import { useRef } from "react";
 import { InputComponent } from "./InputComponent";
 import notNullOrEmptyValidator from "../validators/NotNullOrEmptyValidator";
 import { TextAreaComponent } from "./TextAreaComponent";
 import { noteCreate } from "../requests/notesRequests";
+import { useRef } from "react";
+import descriptionValidator from "../validators/descriptinoValidator";
 
 export default function NoteCreate({
   labelChildrens,
@@ -11,18 +12,18 @@ export default function NoteCreate({
   notesListChangeFun,
 }: any) {
   const refToName = useRef<HTMLInputElement>(null);
-  const refToDiscription = useRef<HTMLTextAreaElement>(null);
+  const refToDescription = useRef<HTMLTextAreaElement>(null);
 
   async function create() {
-    console.log("Discription value: ", refToDiscription);
+    console.log("Description value: ", refToDescription);
     console.log("Name value: ", refToName);
     try {
       const res = await noteCreate({
         Name: refToName?.current?.value ?? "",
-        Discription: refToDiscription?.current?.value ?? "",
+        Description: refToDescription?.current?.value ?? "",
       });
-      if (res.status === 200) notesListChangeFun();
-      else if (res.status === 400)
+      if (res.status == 200) notesListChangeFun();
+      else if (res.status == 400)
         console.error("Юзер написал пустую строку, валидация нужна");
     } catch (error) {
       console.error(error);
@@ -46,10 +47,10 @@ export default function NoteCreate({
       <div>
         <TextAreaComponent
           id="nameInput"
-          labelText="Discription: "
-          invalidText={"Discription is empty"}
-          validatorFun={notNullOrEmptyValidator}
-          ref={refToDiscription}
+          labelText="Description: "
+          invalidText={"Description is empty"}
+          validatorFun={descriptionValidator}
+          ref={refToDescription}
           labelOtherProps={labelChildrens}
           textareaOtherProps={{ required: true, ...textAreaChildrens }}
         />

@@ -14,29 +14,32 @@ public class NoteController : ControllerBase
     //КОроче решением было то что я юзер айди брал уже в actions а не конструкторе, 
     //https://qna.habr.com/q/1363664
     private readonly ILogger<NoteController> _logger;
-    public NoteController(ILogger<NoteController> logger)
+    private readonly NoteService _noteService;
+    public NoteController(ILogger<NoteController> logger, NoteService noteService)
     {
         _logger = logger;
+        _noteService = noteService;
     }
 
     [HttpGet]
     public async Task<IActionResult> NotesGet(int? from = null, int? to = null, string? sortType = null, string? search = null)
     {
         var userId = User?.Claims?.GetIdValue();
-        string _authorId = userId is not null ? userId : null;
+        string authorId = userId is not null ? userId : null;
 
         // До я юзал пар маршрута, они обез, мне нужно не обез, потому юзаю теперь query 
-        if (NoteService.notes.Count <= 0)
-            return NotFound();
 
-        List<NoteEntity> selectedNotes = NoteService.notes.Where(n => n.AuthorId == _authorId).ToList();
+        List<NoteEntity> selectedNotes =
+            (await _noteService.GetNotesByAuthorId(authorId)).ToList();
 
         if (selectedNotes == null)
             return NotFound();
 
         if (search != null)
         {
-            selectedNotes = selectedNotes.Where((n) => n.Name.ToLower().Contains(search.ToLower())).ToList();
+            selectedNotes = selectedNotes
+                .Where((n) => n.Name.ToLower().Contains(search.ToLower()))
+                .ToList();
         }
 
         selectedNotes =
@@ -54,20 +57,21 @@ public class NoteController : ControllerBase
         }
         HttpContext.Response.Headers.Add("selectedNotesTotalCount",
             selectedNotes.Count.ToString());//Клиенту для пагинации нужно снать колл нотов
+
         return Ok(selectedNotes);
     }
     [ValidationFilter]
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> NoteGet([Required] int id)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> NoteGet([Required] Guid id)
     {
         var userId = User?.Claims?.GetIdValue();
-        string _authorId = userId is not null ? userId : null;
+        string authorId = userId is not null ? userId : null;
 
-        var note = NoteService.notes.FirstOrDefault((n) => n.Id == id);
+        var note = await _noteService.GetNote(id);
 
         if (note != null)
         {
-            if (note.AuthorId != _authorId)
+            if (note.AuthorId.Equals(authorId))
                 return Forbid();
 
             return Ok(note);
@@ -76,38 +80,37 @@ public class NoteController : ControllerBase
     }
 
     [ValidationFilter]
-
     [HttpPost]
-    public IActionResult NoteCreate([FromForm, Required] NoteDto dto)
+    public async Task<IActionResult> NoteCreate([FromForm] NoteDto dto)
     {
         var userId = User?.Claims?.GetIdValue();
-        string _authorId = userId is not null ? userId : null;
+        string authorId = userId is not null ? userId : null;
 
-        var newNote = NoteEntity.Create(dto, _authorId);
+        var newNote = NoteEntity.Create(dto, authorId);
 
         if (newNote is not null)
         {
-            NoteService.notes.Add(newNote);
+            await _noteService.Add(newNote);
             return Ok();
         }
         return BadRequest();
     }
+
     [ValidationFilter]
-    [HttpPut("{id:int}")]
-    public IActionResult NoteUpdate([FromForm, Required] NoteChangeDto newValue)
+    [HttpPut]
+    public async Task<IActionResult> NoteUpdate([FromForm] NoteChangeDto newValue)
     {
         var userId = User?.Claims?.GetIdValue();
-        string _authorId = userId is not null ? userId : null;
+        string authorId = userId is not null ? userId : null;
 
-        var changeableNote = NoteService.notes.FirstOrDefault(x => x.Id == newValue.Id);
+        var changableNote = await _noteService.GetNote(newValue.Id);
 
-        if (changeableNote != null)
+        if (changableNote is not null)
         {
-            if (changeableNote.AuthorId != _authorId)
+            if (changableNote.AuthorId.Equals(authorId))
                 return Forbid();
 
-            changeableNote.Name = newValue.NewName;
-            changeableNote.Discription = newValue.NewDiscription;
+            await _noteService.NameAndDescriptionUpdate(newValue);
 
             return Ok();
         }
@@ -115,20 +118,20 @@ public class NoteController : ControllerBase
         return NotFound();
     }
     [ValidationFilter]
-    [HttpDelete("{id:int}")]
-    public IActionResult NoteDelete([Required] int id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> NoteDelete([Required] Guid id)
     {
         var userId = User?.Claims?.GetIdValue();
-        string _authorId = userId is not null ? userId : null;
+        string authorId = userId is not null ? userId : null;
 
-        var deleteNote = NoteService.notes.FirstOrDefault((n) => n.Id == id);
+        var deleteNote = await _noteService.GetNote(id);
 
         if (deleteNote != null)
         {
-            if (deleteNote.AuthorId != _authorId)
+            if (deleteNote.AuthorId.Equals(authorId))
                 return Forbid();
 
-            NoteService.notes.Remove(deleteNote);
+            await _noteService.Remove(deleteNote.Id);
             return Ok();
         }
 

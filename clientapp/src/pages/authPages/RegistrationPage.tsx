@@ -77,7 +77,7 @@ export default function RegistrationPage() {
             <div>
               <h2>Register to your account to use our application</h2>
             </div>
-            {statusAndText.status === 409 ? (
+            {statusAndText.status == 409 ? (
               <div>
                 <h2 className="error">{statusAndText.text}</h2>
               </div>

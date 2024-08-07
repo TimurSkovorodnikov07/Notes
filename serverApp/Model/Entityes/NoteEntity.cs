@@ -2,31 +2,34 @@ using System.ComponentModel.DataAnnotations;
 
 public class NoteEntity
 {
+    public NoteEntity()
+    {
+        Id = Guid.NewGuid();
+    }
     [Required]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    [Required]
+    [Required, StringLength(120)]
     public string Name { get; set; }
 
     [Required]
     public DateTime TimeOfCreation { get; set; }
 
-    public string Discription { get; set; }
+
+    [StringLength(5000)]
+    public string? Description { get; set; }
 
     [Required]
-    public string AuthorId { get; set; }
+    public Guid AuthorId { get; set; }
 
-    public static NoteEntity? Create(string name, string discription, DateTime timeOfCreation, string authorId)
+    public static NoteEntity? Create(string name, string description, DateTime timeOfCreation, string authorId)
     {
-        var curId = NoteService.notes.LastOrDefault()?.Id ?? 0;
-
         var note = new NoteEntity
         {
-            Id = curId + 1,
             Name = name,
-            Discription = discription,
+            Description = description,
             TimeOfCreation = timeOfCreation,
-            AuthorId = authorId,
+            AuthorId = new Guid(authorId),
         };
 
         if (NoteStaticValidator.IsValid(note))
@@ -35,5 +38,5 @@ public class NoteEntity
         return null;
     }
     public static NoteEntity? Create(NoteDto dto, string authorId) =>
-        Create(dto.Name, dto.Discription, DateTime.UtcNow, authorId);
+        Create(dto.Name, dto.Description, DateTime.UtcNow, authorId);
 }

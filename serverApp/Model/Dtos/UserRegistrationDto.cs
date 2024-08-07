@@ -2,12 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 public class UserRegistrationDto
 {
-    [Required]
+    [Required, StringLength(24)]
     public string Name { get; set; }
 
-    [Required]
+    [Required, StringLength(45)]
     public string Email { get; set; }
 
-    [Required]
+    [Required,
+    RegularExpression(UserLoginDto.PASSWORDREGEX)]
     public string Password { get; set; }
 }

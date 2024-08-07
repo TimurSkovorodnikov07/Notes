@@ -12,7 +12,7 @@ export default function NoteRemoveModelWindow({
   async function onRemove() {
     const result = await noteRemove(removableNote.id);
     console.log(result);
-    if (result.status === 200) {
+    if (result.status == 200) {
       notesListChangeFun?.();
       setOpenModeWindow(false);
     }

@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.InteropServices;
-
 public class UserEntity
 {
     public UserEntity()
@@ -9,12 +7,12 @@ public class UserEntity
     }
 
     [Required]
-    public Guid Id { get; init; }
+    public Guid Id { get; set; }
 
-    [Required]
+    [Required, StringLength(24)]
     public string Name { get; set; }
 
-    [Required]
+    [Required, StringLength(45)]
     public string Email { get; set; }
     public bool EmailVerify { get; set; }
 

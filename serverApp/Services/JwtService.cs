@@ -6,10 +6,13 @@ public class JwtService
 {
     private readonly JwtOptions _options;
     private readonly ILogger<JwtService> _logger;
-    public JwtService(IOptions<JwtOptions> options, ILogger<JwtService> logger)
+    private readonly UserService _userService;
+    public JwtService(IOptions<JwtOptions> options,
+     ILogger<JwtService> logger, UserService userService)
     {
         _options = options.Value;
         _logger = logger;
+        _userService = userService;
     }
 
     public string AccessTokenCreate(UserEntity user)
@@ -62,13 +65,13 @@ public class JwtService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
-    public UserEntity? GetUserFromRefreshToken(string refresh)
+    public async Task<UserEntity?> GetUserFromRefreshToken(string refresh)
     {
         var token = new JwtSecurityTokenHandler().ReadJwtToken(refresh);
         var userId = token?.Claims?.First(c => c.Type == "userId")?.Value;
 
         return userId is not null
-        ? UserService.Users.FirstOrDefault(u => u.Id == new Guid(userId))
+        ? await _userService.GetUser(new Guid(userId))
         : null;
     }
 }

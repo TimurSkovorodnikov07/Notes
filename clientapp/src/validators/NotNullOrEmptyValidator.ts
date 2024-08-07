@@ -1,3 +1,3 @@
 export default function notNullOrEmptyValidator(text: string): boolean {
-  return text != null;
+  return text != null && text != "";
 }

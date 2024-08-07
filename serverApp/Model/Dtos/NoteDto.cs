@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 public class NoteDto
 {
-    [Required]
+    [Required, StringLength(120)]
     public string Name { get; set; }
 
-    [Required]
-    public string Discription { get; set; }
+    [StringLength(5000)]
+    public string? Description { get; set; }
 }

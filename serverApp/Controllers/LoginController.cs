@@ -14,9 +14,11 @@ public class LoginController : ControllerBase
     private readonly IEmailVerify _emailVerify;
     private readonly JwtService _jwtService;
     private readonly VerfiyCodeOptions _verifierCodeOptions;
+    private readonly UserService _userService;
     public LoginController(IHasher hasher, ILogger<LoginController> logger,
         IHashVerify hashVerify, IEmailVerify emailVerify,
-        JwtService jwtService, IOptions<VerfiyCodeOptions> options)
+        JwtService jwtService, IOptions<VerfiyCodeOptions> options,
+        UserService userService)
     {
         _hasher = hasher;
         _logger = logger;
@@ -26,12 +28,13 @@ public class LoginController : ControllerBase
         _jwtService = jwtService;
 
         _verifierCodeOptions = options.Value;
+        _userService = userService;
     }
 
     [HttpPost, Route("login"), AnonymousOnly]
     public async Task<IActionResult> Login([Required, FromForm] UserLoginDto dto)
     {
-        var findUsers = UserService.Users.Where(x => x.Email == dto.Email);
+        var findUsers = await _userService.GetUsersByEmail(dto.Email);
 
         if (findUsers is not null || findUsers.Count() > 0)
         {
@@ -45,7 +48,7 @@ public class LoginController : ControllerBase
             return Ok(new
             {
                 UserId = findUser.Id,
-                DiedAfterSeconds = _verifierCodeOptions.DiedAfterSeconds.ToString(),
+                CodeDiedAfterSeconds = _verifierCodeOptions.DiedAfterSeconds.ToString(),
                 CodeLength = _verifierCodeOptions.Length.ToString()
             });
         }
@@ -55,9 +58,9 @@ public class LoginController : ControllerBase
     [HttpPost, Route("accountcreate"), AnonymousOnly]
     public async Task<IActionResult> AccountCreate([Required, FromForm] UserRegistrationDto dto)
     {
-        var existingUser = UserService.Users
-            .FirstOrDefault(x => x.Email == dto.Email &&
-            (x.EmailVerify || _hashVerify.Verify(dto.Password, x.PasswordHash)));
+        var existingUser = (await _userService.GetUsersByEmail(dto.Email))
+            .FirstOrDefault(x => x.EmailVerify
+            || _hashVerify.Verify(dto.Password, x.PasswordHash));
         //Зачем я беру юзера у которого есть подверждение или такой же пороль?
         //Чтобы хитрый школотрон не смог поломать мне все нахуй
         //Дело в том что AccountCreate ДО мог создать аккаунты с одинаковыми почтами и поролями, тк они было не подтверждены, потому добавил _hashVerify.Verify
@@ -73,14 +76,14 @@ public class LoginController : ControllerBase
 
             if (newUser != null)
             {
-                UserService.Users.Add(newUser);//User create, вобще в идиале нужна бд, но мне лишь нужно потыкать реакт который работает с asp.net
+                await _userService.Add(newUser);//User create, вобще в идиале нужна бд, но мне лишь нужно потыкать реакт который работает с asp.net
                 _logger.LogDebug("Created user: {0}", newUser.Name);
 
                 await _emailVerify.CodeSend(newUser.Id, newUser.Email);
                 return Ok(new
                 {
                     UserId = newUser.Id,
-                    DiedAfterSeconds = _verifierCodeOptions.DiedAfterSeconds.ToString(),
+                    CodeDiedAfterSeconds = _verifierCodeOptions.DiedAfterSeconds.ToString(),
                     CodeLength = _verifierCodeOptions.Length.ToString()
                 });
             }
@@ -91,18 +94,17 @@ public class LoginController : ControllerBase
 
 
     [HttpPut, Route("coderesend/{userId}"), AnonymousOnly]
-    public async Task<IActionResult> CodeResend(string userId)
+    public async Task<IActionResult> CodeResend(Guid userId)
     {
-        var id = new Guid(userId);
-        var user = UserService.Users.FirstOrDefault(u => u.Id == id);
+        var user = await _userService.GetUser(userId);
 
         if (user is null)
             return NotFound("User not found");
 
-        await _emailVerify.Resend(id, user.Email);
+        await _emailVerify.Resend(userId, user.Email);
         return Ok(new
         {
-            DiedAfterSeconds = _verifierCodeOptions.DiedAfterSeconds.ToString(),
+            CodeDiedAfterSeconds = _verifierCodeOptions.DiedAfterSeconds.ToString(),
             CodeLength = _verifierCodeOptions.Length.ToString()
         });
     }
@@ -114,7 +116,7 @@ public class LoginController : ControllerBase
         if (userId == null)
             return BadRequest();
 
-        var user = UserService.Users.FirstOrDefault((u) => u.Id.ToString() == userId);
+        var user = await _userService.GetUser(new Guid(userId));
 
         return Ok(user != null
             ? new UserDto { Id = user.Id.ToString(), Email = user.Email, Name = user.Name }
@@ -122,19 +124,18 @@ public class LoginController : ControllerBase
     }
 
     [HttpGet, Route("emailverify/{userId}/{code}"), AnonymousOnly]
-    public async Task<IActionResult> EmailVerify(string userId, string code)
+    public async Task<IActionResult> EmailVerify(Guid userId, string code)
     {
-        var id = new Guid(userId);
-        var findUser = UserService.Users.FirstOrDefault(u => u.Id == id);
+        var findUser = await _userService.GetUser(userId);
 
         if (findUser is null)
             return NotFound("User not found");
 
-        var verifyRes = await _emailVerify.CodeVerify(id, code);
+        var verifyRes = await _emailVerify.CodeVerify(userId, code);
 
         if (verifyRes)
         {
-            findUser.EmailVerify = true;
+            await _userService.EmailVerUpdate(findUser.Id, true);
             var tokens = await TokensCreate(findUser);
 
             await RefreshTokenService.AddRefreshToken(findUser.Id, tokens.RefreshToken);
@@ -145,10 +146,10 @@ public class LoginController : ControllerBase
 
     //Authorize буду юзать лишь для Акцес, тк он и будет основным токеном, рефреш нужен лишь для создания новой пары акцес и рефреш
     //Только Анон  тк у меня проверка именно акцес токена.
-    [HttpGet, Route("tokensupdate"), AnonymousOnly]
+    [HttpPut, Route("tokensupdate"), AnonymousOnly]
     public async Task<IActionResult> TokensUpdate([FromBody, Required] string refresh)
     {
-        var user = _jwtService.GetUserFromRefreshToken(refresh);
+        var user = await _jwtService.GetUserFromRefreshToken(refresh);
 
         if (user is not null && RefreshTokenService.RefreshTokenVerify(refresh))
         {

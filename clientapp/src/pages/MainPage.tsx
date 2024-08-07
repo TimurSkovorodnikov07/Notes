@@ -27,7 +27,7 @@ export default function MainPage() {
         sortType: sortingType,
         search: search,
       });
-      if (res?.status === 200) {
+      if (res?.status == 200) {
         setNotes(res?.data);
         setTotalNotes(res?.headers["selectedNotesTotalCount"]);
       }

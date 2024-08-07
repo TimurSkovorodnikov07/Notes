@@ -31,7 +31,7 @@ export default function EmailVerify({
     const result = await emailVerify(userId, code);
     const tokens = result?.data;
 
-    if (tokens != undefined && result?.status === 200) {
+    if (tokens != undefined && result?.status == 200) {
       localStorage.setItem(accessTokenInLocalStorage, tokens.accessToken);
       Cookies.set(refreshTokenInCookies, tokens.refreshToken);
       navigate("/");

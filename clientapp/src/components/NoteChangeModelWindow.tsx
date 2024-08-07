@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import "../styles/ModelWindows.css";
 import ModelWindow from "./ModelWindow";
 import { InputComponent } from "./InputComponent";
@@ -6,6 +6,7 @@ import notNullOrEmptyValidator from "../validators/NotNullOrEmptyValidator";
 import { TextAreaComponent } from "./TextAreaComponent";
 import INoteChangeParams from "../interfaces/parametrs/INoteChangeParams";
 import { noteUpdate } from "../requests/notesRequests";
+import descriptionValidator from "../validators/descriptinoValidator";
 
 export default function NoteChangeModelWindow({
   changeableNote,
@@ -16,16 +17,16 @@ export default function NoteChangeModelWindow({
 }: INoteChangeParams) {
   const [modeWindowIsOpen, setOpenModeWindow] = useState(false);
   const refToName = useRef<HTMLInputElement>(null);
-  const refToDiscription = useRef<HTMLTextAreaElement>(null);
+  const refToDescription = useRef<HTMLTextAreaElement>(null);
 
   async function onChange() {
     const result = await noteUpdate({
       Id: changeableNote.id,
       NewName: refToName.current?.value ?? "",
-      NewDiscription: refToDiscription.current?.value ?? "",
+      NewDescription: refToDescription.current?.value ?? "",
     });
 
-    if (result.status === 200) {
+    if (result.status == 200) {
       notesListChangeFun?.();
       setOpenModeWindow(false);
     }
@@ -56,14 +57,14 @@ export default function NoteChangeModelWindow({
       <div>
         <TextAreaComponent
           id="nameInput"
-          labelText="Discription: "
-          invalidText={"Discription is empty"}
-          validatorFun={notNullOrEmptyValidator}
-          ref={refToDiscription}
+          labelText="Description: "
+          invalidText={"Description is empty"}
+          validatorFun={descriptionValidator}
+          ref={refToDescription}
           labelOtherProps={labelChildrens}
           textareaOtherProps={{
             required: true,
-            defaultValue: changeableNote.discription,
+            defaultValue: changeableNote.description,
             ...textAreaChildrens,
           }}
         />

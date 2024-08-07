@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -102,6 +103,14 @@ builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetRequiredSection("UserSecrets:Email"));
 
 //Add services
+builder.Services.AddSingleton<ConnectionFactory>(new ConnectionFactory(
+    builder.Configuration
+    .GetRequiredSection("UserSecrets:PostgresConnectionStr")
+    .Get<string>()));
+builder.Services.AddSingleton<QueryCreaterService>();
+builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<NoteService>();
+
 builder.Services.AddSingleton<ITokenNameInCookies>(jwtOptions);
 builder.Services.AddSingleton<BaseEmailSenderService>();
 builder.Services.AddSingleton<JwtService>();

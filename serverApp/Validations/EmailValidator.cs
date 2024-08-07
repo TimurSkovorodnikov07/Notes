@@ -4,7 +4,7 @@ public class EmailValidator : AbstractValidator<string>
 {
     public EmailValidator()
     {
-        RuleFor(x => x).NotEmpty().EmailAddress().WithMessage("Email not valid");
+        RuleFor(x => x).MaximumLength(45).NotEmpty().EmailAddress().WithMessage("Email not valid");
     }
 }
 

@@ -1,11 +1,11 @@
 {
   "Files": [
     {
-      "Id": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/favicon.ico",
+      "Id": "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/wwwroot/favicon.ico",
       "PackagePath": "staticwebassets/favicon.ico"
     },
     {
-      "Id": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/favicon.jpg",
+      "Id": "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/wwwroot/favicon.jpg",
       "PackagePath": "staticwebassets/favicon.jpg"
     },
     {

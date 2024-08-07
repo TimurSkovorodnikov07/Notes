@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "H3eArgeACQGN+hT0miz/KiYI39hkxiJKuTp36PIFjNY=",
+  "Hash": "03wq+K0T2JaTC2WLmL272weBVlVvSJXfzg4okFGaXtQ=",
   "Source": "FullstackApp1",
   "BasePath": "_content/FullstackApp1",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "FullstackApp1/wwwroot",
       "Source": "FullstackApp1",
-      "ContentRoot": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/",
+      "ContentRoot": "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/wwwroot/",
       "BasePath": "_content/FullstackApp1",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/favicon.ico",
+      "Identity": "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/wwwroot/favicon.ico",
       "SourceId": "FullstackApp1",
       "SourceType": "Discovered",
-      "ContentRoot": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/",
+      "ContentRoot": "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/wwwroot/",
       "BasePath": "_content/FullstackApp1",
       "RelativePath": "favicon.ico",
       "AssetKind": "All",
@@ -36,10 +36,10 @@
       "OriginalItemSpec": "wwwroot/favicon.ico"
     },
     {
-      "Identity": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/favicon.jpg",
+      "Identity": "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/wwwroot/favicon.jpg",
       "SourceId": "FullstackApp1",
       "SourceType": "Discovered",
-      "ContentRoot": "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/",
+      "ContentRoot": "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/wwwroot/",
       "BasePath": "_content/FullstackApp1",
       "RelativePath": "favicon.jpg",
       "AssetKind": "All",

@@ -5,9 +5,9 @@ public class UserDto
     [Required]
     public string Id { get; set; }
 
-    [Required]
+    [Required, StringLength(24)]
     public string Name { get; set; }
 
-    [Required]
+    [Required, StringLength(45)]
     public string Email { get; set; }
 }

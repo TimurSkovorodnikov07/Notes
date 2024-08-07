@@ -65,7 +65,7 @@ export default function LoginPage() {
             <div>
               <h2>Register to your account to use our application</h2>
             </div>
-            {statusAndText.status === 404 || statusAndText.status === 400 ? (
+            {statusAndText.status == 404 || statusAndText.status == 400 ? (
               <div>
                 <h2 className="error">{statusAndText.text}</h2>
               </div>

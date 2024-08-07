@@ -37,17 +37,18 @@ api.interceptors.response.use(
     const originalReq = error.config;
     const refreshToken = Cookies.get(refreshTokenInCookies);
     if (
-      error.response.status === 401 &&
+      error.response.status == 401 &&
       refreshToken != undefined &&
       !error.config._isRetry
     ) {
       try {
         originalReq._isRetry = true; //Нужно isRetry проверка чтобы не сделать бесконечный цикл где хочешь избавиться от 401 но в итоге опять его получаешь(если сервак писал даун)
         const response = await axios
-          .get<ITokens>("/tokensupdate/", { data: refreshToken })
+          .get<ITokens>("/tokensupdate", { data: refreshToken })
           .then();
+        console.log(response);
 
-        if (response.status === 200) {
+        if (response.status == 200) {
           localStorage.setItem(
             accessTokenInLocalStorage,
             response.data.refreshToken

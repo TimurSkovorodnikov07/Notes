@@ -16,7 +16,7 @@ export default function Notes({
             <li {...liChildren} key={x.id}>
               <p>{x.name}</p>
               <span>id: {x.id}</span>
-              <p>{x.discription}</p>
+              <p>{x.description}</p>
 
               <NoteChangeModelWindow
                 changeableNote={x}

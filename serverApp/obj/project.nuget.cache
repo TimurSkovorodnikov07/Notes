@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "lBBewQwmGr0z0gMga+P7MQG+9ahAiPM8amGTVkKh6iYzdU3Dl9lqf1Nyrlc/W2AfOSpDh5v9R/aPduDGovR/ZQ==",
+  "dgSpecHash": "Wg5duKJWA7HbYD6rwFhf52p5s3qDBqoJvcdQu4GrwJlp01J1tkGa3X6oNth2b/MaKJPAh7fSXTrWqodeNCWgEw==",
   "success": true,
-  "projectFilePath": "/home/timur/Desktop/FullStackProj1/serverApp/FullstackApp1.csproj",
+  "projectFilePath": "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/FullstackApp1.csproj",
   "expectedPackageFiles": [
     "/home/timur/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/timur/.nuget/packages/bouncycastle.cryptography/2.4.0/bouncycastle.cryptography.2.4.0.nupkg.sha512",
+    "/home/timur/.nuget/packages/dapper/2.1.35/dapper.2.1.35.nupkg.sha512",
     "/home/timur/.nuget/packages/fluentvalidation/11.9.1/fluentvalidation.11.9.1.nupkg.sha512",
     "/home/timur/.nuget/packages/mailkit/4.7.1.1/mailkit.4.7.1.1.nupkg.sha512",
     "/home/timur/.nuget/packages/microsoft.aspnet.cors/5.3.0/microsoft.aspnet.cors.5.3.0.nupkg.sha512",
@@ -37,6 +38,7 @@
     "/home/timur/.nuget/packages/microsoft.net.http.headers/2.2.0/microsoft.net.http.headers.2.2.0.nupkg.sha512",
     "/home/timur/.nuget/packages/microsoft.openapi/1.6.14/microsoft.openapi.1.6.14.nupkg.sha512",
     "/home/timur/.nuget/packages/mimekit/4.7.1/mimekit.4.7.1.nupkg.sha512",
+    "/home/timur/.nuget/packages/npgsql/8.0.3/npgsql.8.0.3.nupkg.sha512",
     "/home/timur/.nuget/packages/pipelines.sockets.unofficial/2.2.8/pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
     "/home/timur/.nuget/packages/stackexchange.redis/2.7.27/stackexchange.redis.2.7.27.nupkg.sha512",
     "/home/timur/.nuget/packages/swashbuckle.aspnetcore/6.4.0/swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
@@ -50,7 +52,7 @@
     "/home/timur/.nuget/packages/system.io.pipelines/5.0.1/system.io.pipelines.5.0.1.nupkg.sha512",
     "/home/timur/.nuget/packages/system.security.cryptography.pkcs/8.0.0/system.security.cryptography.pkcs.8.0.0.nupkg.sha512",
     "/home/timur/.nuget/packages/system.text.encodings.web/4.5.0/system.text.encodings.web.4.5.0.nupkg.sha512",
-    "/home/timur/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.6/microsoft.aspnetcore.app.ref.8.0.6.nupkg.sha512"
+    "/home/timur/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.7/microsoft.aspnetcore.app.ref.8.0.7.nupkg.sha512"
   ],
   "logs": [
     {

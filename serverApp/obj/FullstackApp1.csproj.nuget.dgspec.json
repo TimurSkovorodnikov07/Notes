@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/timur/Desktop/FullStackProj1/serverApp/FullstackApp1.csproj": {}
+    "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/FullstackApp1.csproj": {}
   },
   "projects": {
-    "/home/timur/Desktop/FullStackProj1/serverApp/FullstackApp1.csproj": {
+    "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/FullstackApp1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/timur/Desktop/FullStackProj1/serverApp/FullstackApp1.csproj",
+        "projectUniqueName": "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/FullstackApp1.csproj",
         "projectName": "FullstackApp1",
-        "projectPath": "/home/timur/Desktop/FullStackProj1/serverApp/FullstackApp1.csproj",
+        "projectPath": "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/FullstackApp1.csproj",
         "packagesPath": "/home/timur/.nuget/packages/",
-        "outputPath": "/home/timur/Desktop/FullStackProj1/serverApp/obj/",
+        "outputPath": "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/timur/.nuget/NuGet/NuGet.Config"
@@ -86,9 +86,17 @@
               "target": "Package",
               "version": "[6.6.2, )"
             },
+            "dapper": {
+              "target": "Package",
+              "version": "[2.1.35, )"
+            },
             "mailkit": {
               "target": "Package",
               "version": "[4.7.1.1, )"
+            },
+            "npgsql": {
+              "target": "Package",
+              "version": "[8.0.3, )"
             }
           },
           "imports": [
@@ -105,7 +113,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.6, 8.0.6]"
+              "version": "[8.0.7, 8.0.7]"
             }
           ],
           "frameworkReferences": {
@@ -116,7 +124,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.106/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.107/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

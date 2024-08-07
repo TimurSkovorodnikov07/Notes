@@ -1,14 +1,14 @@
 import INote from "../interfaces/INote";
 
 export default class Note implements INote {
-  constructor(id: number, name: string, discription: string) {
+  constructor(id: number, name: string, description: string | undefined) {
     this.id = id;
     this.name = name;
     this.timeOfCreation = new Date();
-    this.discription = discription;
+    this.description = description;
   }
   readonly id: number;
   readonly name: string;
   readonly timeOfCreation: Date;
-  readonly discription: string;
+  readonly description: string | undefined;
 }
