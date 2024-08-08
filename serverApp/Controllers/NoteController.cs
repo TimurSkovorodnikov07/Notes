@@ -20,10 +20,12 @@ public class NoteController : ControllerBase
         _logger = logger;
         _noteService = noteService;
     }
-
-    [HttpGet]
-    public async Task<IActionResult> NotesGet(int? from = null, int? to = null, string? sortType = null, string? search = null)
+    [HttpGet, ValidationFilter]
+    public async Task<IActionResult> NotesGet([Required] int from, [Required] int to, string sortType = "dateDesc", string? search = null)
     {
+        if (from < 0 || from > to)
+            return BadRequest();
+
         var userId = User?.Claims?.GetIdValue();
         string authorId = userId is not null ? userId : null;
 
@@ -32,10 +34,10 @@ public class NoteController : ControllerBase
         List<NoteEntity> selectedNotes =
             (await _noteService.GetNotesByAuthorId(authorId)).ToList();
 
-        if (selectedNotes == null)
+        if (selectedNotes == null || selectedNotes.Count < 0)
             return NotFound();
 
-        if (search != null)
+        if (search != null && search != "")
         {
             selectedNotes = selectedNotes
                 .Where((n) => n.Name.ToLower().Contains(search.ToLower()))
@@ -47,18 +49,19 @@ public class NoteController : ControllerBase
          ? selectedNotes.OrderBy((n) => n.TimeOfCreation).ToList()
          : selectedNotes.OrderByDescending((n) => n.TimeOfCreation).ToList();
 
+        var totalCount = selectedNotes.Count;
 
-        if (from != null && to != null)
-        {
-            var taken = selectedNotes.GetValues((int)from, (int)to);
+        selectedNotes = selectedNotes
+           .Skip(from)
+           .Take(to - from)
+           .ToList();
 
-            if (taken != null)
-                selectedNotes = taken;
-        }
-        HttpContext.Response.Headers.Add("selectedNotesTotalCount",
-            selectedNotes.Count.ToString());//Клиенту для пагинации нужно снать колл нотов
+        //Блять!!! Сервак отправляет как оказалось headers с ниж регистром, удобно, но блять, не знал, ну ок
+        //CORS включи если нужны кастомные хедеры отправлять
+        HttpContext.Response.Headers.Append("totalcount",
+            totalCount.ToString());//Клиенту для пагинации нужно снать колл нотов
 
-        return Ok(selectedNotes);
+        return Ok(new { notes = selectedNotes, totalCount = totalCount });
     }
     [ValidationFilter]
     [HttpGet("{id}")]

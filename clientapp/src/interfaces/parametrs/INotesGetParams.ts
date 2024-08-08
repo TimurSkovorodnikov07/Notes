@@ -1,6 +1,6 @@
 export default interface INotesGetParams {
-  from: number | undefined;
-  to: number | undefined;
-  sortType: string | undefined;
+  from: number;
+  to: number;
+  sortType: string;
   search: string | undefined;
 }

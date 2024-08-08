@@ -2,11 +2,10 @@ import { useRef, useState } from "react";
 import "../styles/ModelWindows.css";
 import ModelWindow from "./ModelWindow";
 import { InputComponent } from "./InputComponent";
-import notNullOrEmptyValidator from "../validators/NotNullOrEmptyValidator";
 import { TextAreaComponent } from "./TextAreaComponent";
 import INoteChangeParams from "../interfaces/parametrs/INoteChangeParams";
 import { noteUpdate } from "../requests/notesRequests";
-import descriptionValidator from "../validators/descriptinoValidator";
+import noteNameValiadator from "../validators/noteNameValiadator";
 
 export default function NoteChangeModelWindow({
   changeableNote,
@@ -18,6 +17,9 @@ export default function NoteChangeModelWindow({
   const [modeWindowIsOpen, setOpenModeWindow] = useState(false);
   const refToName = useRef<HTMLInputElement>(null);
   const refToDescription = useRef<HTMLTextAreaElement>(null);
+
+  const [nameIsValid, setNameIsValid] = useState(true);
+  //Тру по дефолту тк в отличие в  NoteCreate по дефолту у итпутов есть уже значения, тут же просто меняет юзер уже существующие значения
 
   async function onChange() {
     const result = await noteUpdate({
@@ -42,13 +44,14 @@ export default function NoteChangeModelWindow({
         <InputComponent
           id="nameInput"
           inputType="text"
-          labelText="Name: "
           invalidText={"Name is empty"}
-          validatorFun={notNullOrEmptyValidator}
+          validatorFun={noteNameValiadator}
+          validatedFun={() => setNameIsValid(true)}
+          invalidatedFun={() => setNameIsValid(false)}
           ref={refToName}
           labelOtherProps={labelChildrens}
           inputOtherProps={{
-            required: true,
+            placeholder: "Name...",
             defaultValue: changeableNote.name,
             ...inputChildrens,
           }}
@@ -57,19 +60,22 @@ export default function NoteChangeModelWindow({
       <div>
         <TextAreaComponent
           id="nameInput"
-          labelText="Description: "
-          invalidText={"Description is empty"}
-          validatorFun={descriptionValidator}
           ref={refToDescription}
           labelOtherProps={labelChildrens}
           textareaOtherProps={{
-            required: true,
+            placeholder: "Description...",
             defaultValue: changeableNote.description,
             ...textAreaChildrens,
           }}
         />
       </div>
-      <button onClick={async () => await onChange()}>Change</button>
+      <button
+        onClick={async () => {
+          if (nameIsValid) await onChange();
+        }}
+      >
+        Change
+      </button>
     </ModelWindow>
   ) : (
     <button onClick={() => setOpenModeWindow(true)}>Change</button>

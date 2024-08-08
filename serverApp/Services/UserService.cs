@@ -31,7 +31,6 @@ public class UserService
     public async Task<UserEntity?> GetUser(Guid guid)
     {
         var users = await GetUsers("id", guid.ToString());
-        _logger.LogCritical(users.Count().ToString());
 
         return users.FirstOrDefault();
     }
@@ -59,14 +58,7 @@ public class UserService
         //и вам не нужно использовать дополнительные конвертеры для работы с Guid
         //Это пиздец....СКОлько времени я блять убил...s
 
-        var list = await dbCon.QueryAsync<UserEntity>(sqlQuery, new { valueParam = value });
-
-        foreach (var user in list)
-        {
-            _logger.LogCritical(user.Name.ToString());
-        }
-        return list;
-        //https://habr.com/ru/articles/665836/
+        return await dbCon.QueryAsync<UserEntity>(sqlQuery, new { valueParam = value });
         //https://stackoverflow.com/questions/36325228/comparing-query-and-execute-in-dapper
     }
 

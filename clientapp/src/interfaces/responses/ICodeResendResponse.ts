@@ -1,4 +1,4 @@
 export default interface ICodeResendResponse {
-  codeDiedAfterSeconds: string;
-  codeLength: string;
+  codeDiedAfterSeconds: number;
+  codeLength: number;
 }

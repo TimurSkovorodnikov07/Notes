@@ -1,6 +1,6 @@
 export default interface INote {
-  readonly id: number;
+  readonly id: string;
   readonly name: string;
   readonly timeOfCreation: Date;
-  readonly description: string | undefined;
+  readonly description?: string;
 }

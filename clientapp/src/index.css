@@ -29,12 +29,11 @@ code {
 :link {
   color: #61dafb;
 }
-
+.error-text
+{
+  color: red;
+}
 .clickable-text
 {
   color: #61dafb;
-}
-.error
-{
-  color: red;
 }

@@ -4,7 +4,6 @@ import {
   passwordInvalidText,
 } from "../../data/TextsDuringInvalidity";
 import emailValidator from "../../validators/EmailValidator";
-import notNullOrEmptyValidator from "../../validators/NotNullOrEmptyValidator";
 import passwordValidator from "../../validators/PasswordValidator";
 import { useRef, useState } from "react";
 import { accountCreate } from "../../requests/authRequests";
@@ -12,7 +11,7 @@ import { InputComponent } from "../../components/InputComponent";
 import { Link } from "react-router-dom";
 import IStatusCodeAndText from "../../interfaces/IStatusCodeAndText";
 import EmailVerify from "../../components/EmailVerify";
-import IAccountCreateResponse from "../../interfaces/responses/IAccountCreateResponse";
+import userNameValidator from "../../validators/userNameValidator";
 
 export default function RegistrationPage() {
   const [statusAndText, setStatusAndText] = useState<IStatusCodeAndText>({
@@ -27,6 +26,10 @@ export default function RegistrationPage() {
   const emailRef = useRef<HTMLInputElement>(null);
   const pasRef = useRef<HTMLInputElement>(null);
 
+  const [nameIsValid, setNameIsValid] = useState(false);
+  const [emailIsValid, setEmailIsValid] = useState(false);
+  const [pasIsValid, setPasIsValid] = useState(false);
+
   async function onSubmit() {
     const result = await accountCreate({
       Name: nameRef?.current?.value ?? "",
@@ -34,12 +37,14 @@ export default function RegistrationPage() {
       Password: pasRef?.current?.value ?? "",
     });
     const data = result?.data;
+
     switch (result?.status) {
       case 200:
         setStatusAndText({ status: 200, text: "OK" });
         setUserId(data.userId);
-        setCodeLength(parseInt(data.codeLength));
-        setCodeDiedAfterSeconds(parseInt(data.codeDiedAfterSeconds));
+        setCodeLength(data.codeLength);
+        setCodeDiedAfterSeconds(data.codeDiedAfterSeconds);
+
         break;
       case 400:
         setStatusAndText({ status: 400, text: result.statusText });
@@ -88,36 +93,50 @@ export default function RegistrationPage() {
               <InputComponent
                 id="nameInput"
                 inputType="text"
-                labelText="Name: "
                 invalidText={nameInvalidText}
-                validatorFun={notNullOrEmptyValidator}
+                validatorFun={userNameValidator}
+                validatedFun={() => setNameIsValid(true)}
+                invalidatedFun={() => setNameIsValid(false)}
                 ref={nameRef}
-                inputOtherProps={{ required: true }}
+                inputOtherProps={{
+                  placeholder: "Name...",
+                }}
               />
             </div>
             <div>
               <InputComponent
                 id="emailInput"
                 inputType="email"
-                labelText="Email: "
                 invalidText={emailInvalidText}
                 validatorFun={emailValidator}
+                validatedFun={() => setEmailIsValid(true)}
+                invalidatedFun={() => setEmailIsValid(false)}
                 ref={emailRef}
-                inputOtherProps={{ required: true }}
+                inputOtherProps={{
+                  placeholder: "example@mail.abc...",
+                }}
               />
             </div>
             <div>
               <InputComponent
                 id="passwordInput"
                 inputType="password"
-                labelText="Password: "
                 invalidText={passwordInvalidText}
                 validatorFun={passwordValidator}
+                validatedFun={() => setPasIsValid(true)}
+                invalidatedFun={() => setPasIsValid(false)}
                 ref={pasRef}
-                inputOtherProps={{ required: true }}
+                inputOtherProps={{
+                  placeholder: "megaPasw03r+dD...",
+                }}
               />
             </div>
-            <input type="submit" onClick={async () => await onSubmit()} />
+            <input
+              type="submit"
+              onClick={async () => {
+                if (nameIsValid && emailIsValid && pasIsValid) await onSubmit();
+              }}
+            />
             <div>
               <p>
                 If you have an account, <Link to={"/login"}>log in</Link> to it

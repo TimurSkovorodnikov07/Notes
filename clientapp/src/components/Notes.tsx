@@ -10,12 +10,11 @@ export default function Notes({
 }: INotesPageParams) {
   return (
     <>
-      <ol {...ulChildren}>
+      <ul {...ulChildren}>
         {noteList.map((x) => {
           return (
             <li {...liChildren} key={x.id}>
-              <p>{x.name}</p>
-              <span>id: {x.id}</span>
+              <p>Name: {x.name}</p>
               <p>{x.description}</p>
 
               <NoteChangeModelWindow
@@ -29,7 +28,7 @@ export default function Notes({
             </li>
           );
         })}
-      </ol>
+      </ul>
     </>
   );
 }

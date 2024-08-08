@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import Notes from "../components/Notes";
-import NoteCreate from "../components/NoteCreate";
 import { notesGet } from "../requests/notesRequests";
 import Note from "../classes/Note";
 import { authContext } from "../contexts";
 import { Link } from "react-router-dom";
 import { InputComponent } from "../components/InputComponent";
+import NoteCreateModelWindow from "../components/NoteCreateModelWindow";
 
 export default function MainPage() {
   const authCon = useContext(authContext);
@@ -20,41 +20,53 @@ export default function MainPage() {
   const [pagin, setPagin] = useState(defaultPagin);
 
   async function getNotesQuery() {
+    let fromWithPagin = from + pagin;
+    let toParam =
+      totalNotes != 0 && fromWithPagin >= totalNotes
+        ? totalNotes
+        : fromWithPagin;
     try {
       const res = await notesGet({
         from: from,
-        to: from + totalNotes,
+        to: fromWithPagin,
         sortType: sortingType,
         search: search,
       });
-      if (res?.status == 200) {
-        setNotes(res?.data);
-        setTotalNotes(res?.headers["selectedNotesTotalCount"]);
+      console.log("From: ", from);
+      console.log("To: ", toParam);
+      if (res.status == 200) {
+        setNotes(res.data.notes);
+        setTotalNotes(res.data.totalCount);
       }
     } catch (error) {}
   }
   useEffect(() => {
     getNotesQuery();
-  }, [from, totalNotes, sortingType, search]);
+  }, [from, pagin, sortingType, search]);
 
   function pagination(i: number) {
     setFrom(from + pagin * i);
   }
 
-  return authCon.authenticated ? (
+  return authCon.isAuthenticated ? (
     <>
       <div>
-        <NoteCreate notesListChangeFun={async () => await getNotesQuery()} />
+        <NoteCreateModelWindow
+          notesListChangeFun={async () => await getNotesQuery()}
+        />
       </div>
       <div className="totalNotes">
         <InputComponent
-          id="totalNotesButton"
+          id="paginInput"
           inputType="number"
           labelText="The number of displayed tasks:"
+          beforeValidationFun={(e: any) =>
+            setPagin(parseInt(e.currentTarget.value))
+          }
           inputOtherProps={{
             min: 3,
+            max: 15,
             defaultValue: defaultPagin,
-            onClick: (e: any) => setPagin(parseInt(e.currentTarget.value)),
           }}
         />
       </div>
@@ -76,7 +88,6 @@ export default function MainPage() {
           <option value={"date"}>The old ones first</option>
         </select>
       </div>
-      <div></div>
       <div>
         {notes != null ? (
           <Notes
@@ -90,23 +101,18 @@ export default function MainPage() {
         )}
       </div>
       <div className="otherPages">
-        {from - pagin > 0 ? (
+        {from - pagin >= 0 ? (
           <button onClick={() => pagination(-1)}>Prev</button>
         ) : (
           <></>
         )}
-        {from - pagin > 0 ? (
+        {from + pagin < totalNotes ? (
           <button onClick={() => pagination(1)}>Next</button>
         ) : (
           <></>
         )}
-        {from - pagin > 0 ? (
+        {from + pagin * 2 < totalNotes ? (
           <button onClick={() => pagination(2)}>Next x2</button>
-        ) : (
-          <></>
-        )}
-        {from - pagin > 0 ? (
-          <button onClick={() => pagination(3)}>Next x3</button>
         ) : (
           <></>
         )}

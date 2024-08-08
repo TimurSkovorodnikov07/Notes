@@ -1,12 +1,11 @@
 import React from "react";
-import {
-  AccessTokenContext,
-  AuthenticatedContext,
-  RefreshTokenContext,
-} from "./classes/ContextsClasses";
 
-export const accessTokenContext = React.createContext(new AccessTokenContext());
-export const refreshTokenContext = React.createContext(
-  new RefreshTokenContext()
-);
-export const authContext = React.createContext(new AuthenticatedContext());
+export const accessTokenContext = React.createContext({
+  accessToken: "",
+});
+export const refreshTokenContext = React.createContext({
+  refreshToken: "",
+});
+export const authContext = React.createContext({
+  isAuthenticated: false,
+});

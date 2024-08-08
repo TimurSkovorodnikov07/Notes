@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { InputComponent } from "./InputComponent";
 import { codeResend, emailVerify } from "../requests/authRequests";
 import IEmailVerifyParams from "../interfaces/parametrs/IEmailVerifyParams";
 import ICodeResendResponse from "../interfaces/responses/ICodeResendResponse";
-import ITokens from "../interfaces/ITokens";
 import Cookies from "js-cookie";
 import { refreshTokenInCookies } from "../data/cookiesName";
 import { accessTokenInLocalStorage } from "../data/localStorageItemName";
@@ -18,11 +17,22 @@ export default function EmailVerify({
 
   const [time, setTime] = useState(codeDiedAfterSeconds);
   const [errorText, setErrorText] = useState("");
-
   useEffect(() => {
-    setTimeout(() => {
-      setTime(time - 1);
+    //setTimeout позволяет вызвать функцию один раз через определённый интервал времени.
+    //Например проходит 3 сек, работает фукнция, все, дальше он не будет работать.
+
+    //setInterval позволяет вызывать функцию регулярно, повторяя вызов через определённый интервал времени.
+    //Он же работать будет каждые 3 секунды
+    const timer = setInterval(() => {
+      setTime((prevTime) => {
+        if (prevTime <= 0) {
+          clearInterval(prevTime);
+          return 0;
+        }
+        return prevTime - 1;
+      });
     }, 1000);
+    return () => clearInterval(timer);
   }, []);
 
   async function emailVer(code: string) {
@@ -44,7 +54,7 @@ export default function EmailVerify({
     switch (result?.status) {
       case 200:
         const data: ICodeResendResponse = result?.data;
-        setTime(parseInt(data.codeDiedAfterSeconds));
+        setTime(data.codeDiedAfterSeconds);
         break;
       case 404:
         console.error(`Даун, userId такого на серваке нету, мб userId = ""`);
@@ -65,11 +75,10 @@ export default function EmailVerify({
         <InputComponent
           id="codeInput"
           inputType="text"
-          labelText="Code: "
           inputOtherProps={{
-            required: true,
+            placeholder: "Code...",
             onChange: (event: any) => {
-              if (parseInt(event?.target?.value?.length ?? "0") !== codeLength)
+              if (parseInt(event?.target?.value?.length ?? "0") != codeLength)
                 setErrorText(`The code must be ${codeLength} characters long`);
               else {
                 setErrorText("");

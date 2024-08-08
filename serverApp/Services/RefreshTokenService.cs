@@ -1,21 +1,59 @@
+using System.Security.Cryptography.X509Certificates;
+using Dapper;
+
 public class RefreshTokenService
 {
-    public static List<RefreshToken> RefreshTokens = new List<RefreshToken>();
-    public static async Task AddRefreshToken(Guid userId, string token)
+    public RefreshTokenService(ConnectionFactory factory,
+     QueryCreaterService queryCreater, ILogger<UserService> logger)
     {
-        RefreshTokens.Add(new RefreshToken { UserId = userId, Token = token });
+        _factory = factory;
+        _queryCreater = queryCreater;
+        _logger = logger;
     }
-    public static async Task SetRefreshToken(Guid userId, string newToken)
-    {
-        RefreshTokens.First(x => x.UserId == userId).Token = newToken;
-    }
-    public static bool RefreshTokenVerify(string refresh)
-    {
-        var findToken = RefreshTokens.FirstOrDefault(t => t.Token == refresh);
+    private readonly ILogger<UserService> _logger;
+    private readonly ConnectionFactory _factory;
+    private readonly QueryCreaterService _queryCreater;
 
-        if (findToken is not null)
-            return true;
 
-        return false;
+    public async Task<bool> Add(Guid userId, string refreshToken)
+    {
+        using var dbCon = _factory.Create();
+        var sqlQuery = "INSERT INTO tokens VALUES (user_id, refresh_token) (@userIdParam, @refreshParam)";
+
+        _logger.LogDebug(sqlQuery);
+
+        return await dbCon.ExecuteAsync(sqlQuery, AddOrUpdateParams(userId, refreshToken)) >= 0;
     }
+    public async Task<bool> UpdateToken(Guid userId, string refreshToken)
+    {
+        using var dbCon = _factory.Create();
+        var sqlQuery = "UPDATE tokens SET refresh_token = @refreshParam WHERE user_id = @userIdParam";
+
+        _logger.LogDebug(sqlQuery);
+
+        return await dbCon.ExecuteAsync(sqlQuery, AddOrUpdateParams(userId, refreshToken)) >= 0;
+    }
+    private object AddOrUpdateParams(Guid guid, string refreshToken)
+    {
+        return new
+        {
+            userIdParam = guid.ToString(),
+            refreshParam = refreshToken
+        };
+    }
+
+
+    // public bool RefreshTokenVerify(string refresh, Guid userId);
+    // {
+    //     // using var con = _factory.Create();
+    //     // var sqlQuery = "";
+
+
+    //     // Тут еще нужно будет токен прочитать чтобы юзера взять, по нему найти сам токен, и проверить, совпадают ли 
+    //     // var findToken = await con.QueryAsync<string>
+    //     // if (findToken is not null)
+    //     //     return true;
+
+    //     // return false;
+    // }
 }

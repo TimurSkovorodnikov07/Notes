@@ -1,5 +1,5 @@
 export default interface INoteChangeDto {
-  Id: number;
+  Id: string;
   NewName: string;
-  NewDescription: string;
+  NewDescription?: string;
 }

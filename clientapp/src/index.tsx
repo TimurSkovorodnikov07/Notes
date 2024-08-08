@@ -10,14 +10,13 @@ import { BrowserRouter, Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import { refreshTokenInCookies } from "./data/cookiesName";
 import ITokens from "./interfaces/ITokens";
-
 export const apiUrl = "http://localhost:4505/api";
 export const api = axios.create({
   withCredentials: false,
   baseURL: apiUrl,
   headers: {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+    "Access-Control-Allow-Headers": "*",
+    "Access-Control-Allow-Methods": "*",
   },
 });
 
@@ -43,15 +42,20 @@ api.interceptors.response.use(
     ) {
       try {
         originalReq._isRetry = true; //Нужно isRetry проверка чтобы не сделать бесконечный цикл где хочешь избавиться от 401 но в итоге опять его получаешь(если сервак писал даун)
-        const response = await axios
-          .get<ITokens>("/tokensupdate", { data: refreshToken })
+        const refresh = Cookies.get(refreshTokenInCookies);
+        console.log(refresh);
+        const response = await api
+          .put<ITokens>("/tokensupdate", {
+            RefreshToken: refresh ?? "",
+          })
           .then();
+
         console.log(response);
 
         if (response.status == 200) {
           localStorage.setItem(
             accessTokenInLocalStorage,
-            response.data.refreshToken
+            response.data.accessToken
           );
           Cookies.set(refreshTokenInCookies, response.data.refreshToken);
 
@@ -62,6 +66,7 @@ api.interceptors.response.use(
           console.error(
             "Рефреш токен не валидный либо его нет в бд, иди в login"
           );
+          localStorage.removeItem(accessTokenInLocalStorage);
           Cookies.remove(refreshTokenInCookies);
         }
       } catch (er) {}

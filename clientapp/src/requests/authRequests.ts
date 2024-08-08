@@ -1,8 +1,6 @@
 import objectToFormConverter from "../funs/ObjectToFormConverter";
 import IUserLoginDto from "../interfaces/dtos/IUserLoginDto";
 import IUserRegistrationDto from "../interfaces/dtos/IUserRegistrationDto";
-import { refreshTokenInCookies } from "../data/cookiesName";
-import Cookies from "js-cookie";
 import IAccountCreateResponse from "../interfaces/responses/IAccountCreateResponse";
 import { api } from "..";
 import { AxiosResponse } from "axios";
@@ -28,21 +26,21 @@ export async function login(
 export async function codeResend(
   userId: string
 ): Promise<AxiosResponse<ICodeResendResponse>> {
-  return api.put<ICodeResendResponse>(`coderesend/${userId}`).then();
+  return api.put<ICodeResendResponse>(`/coderesend/${userId}`).then();
 }
 
 export async function userinfo(): Promise<AxiosResponse<User>> {
   return api.get("/userinfo").then();
 }
 
-export async function tokensUpdate(): Promise<AxiosResponse<ITokens>> {
-  const refresh = Cookies.get(refreshTokenInCookies);
-  return api.get<ITokens>("/tokensupdate/", { data: refresh }).then();
-}
-
 export async function emailVerify(
   userId: string,
   code: string
 ): Promise<AxiosResponse<ITokens>> {
-  return api.get<ITokens>(`/emailverify/${userId}/${code}`).then();
+  return api
+    .post<ITokens>(`/emailverify`, {
+      UserId: userId,
+      Code: code,
+    })
+    .then();
 }

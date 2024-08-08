@@ -5,12 +5,11 @@ import {
 import emailValidator from "../../validators/EmailValidator";
 import passwordValidator from "../../validators/PasswordValidator";
 import { useRef, useState } from "react";
-import { accountCreate, login } from "../../requests/authRequests";
+import { login } from "../../requests/authRequests";
 import { InputComponent } from "../../components/InputComponent";
 import { Link } from "react-router-dom";
 import IStatusCodeAndText from "../../interfaces/IStatusCodeAndText";
 import EmailVerify from "../../components/EmailVerify";
-import ILoginResponse from "../../interfaces/responses/ILoginResponse";
 
 export default function LoginPage() {
   const [statusAndText, setStatusAndText] = useState<IStatusCodeAndText>({
@@ -24,6 +23,9 @@ export default function LoginPage() {
   const emailRef = useRef<HTMLInputElement>(null);
   const pasRef = useRef<HTMLInputElement>(null);
 
+  const [emailIsValid, setEmailIsValid] = useState(false);
+  const [pasIsValid, setPasIsValid] = useState(false);
+
   async function onSubmit() {
     const result = await login({
       Email: emailRef?.current?.value ?? "",
@@ -34,8 +36,8 @@ export default function LoginPage() {
       case 200:
         setStatusAndText({ status: 200, text: "OK" });
         setUserId(data.userId);
-        setCodeLength(parseInt(data.codeLength));
-        setCodeDiedAfterSeconds(parseInt(data.codeDiedAfterSeconds));
+        setCodeLength(data.codeLength);
+        setCodeDiedAfterSeconds(data.codeDiedAfterSeconds);
         break;
       case 400:
         setStatusAndText({ status: 400, text: result.statusText });
@@ -63,7 +65,7 @@ export default function LoginPage() {
         return (
           <>
             <div>
-              <h2>Register to your account to use our application</h2>
+              <h2>Log in to your account to use our application</h2>
             </div>
             {statusAndText.status == 404 || statusAndText.status == 400 ? (
               <div>
@@ -76,25 +78,32 @@ export default function LoginPage() {
               <InputComponent
                 id="emailInput"
                 inputType="email"
-                labelText="Email: "
                 invalidText={emailInvalidText}
                 validatorFun={emailValidator}
+                validatedFun={() => setEmailIsValid(true)}
+                invalidatedFun={() => setEmailIsValid(false)}
                 ref={emailRef}
-                inputOtherProps={{ required: true }}
+                inputOtherProps={{ placeholder: "example@mail.abc..." }}
               />
             </div>
             <div>
               <InputComponent
                 id="passwordInput"
                 inputType="password"
-                labelText="Password: "
                 invalidText={passwordInvalidText}
                 validatorFun={passwordValidator}
+                validatedFun={() => setPasIsValid(true)}
+                invalidatedFun={() => setPasIsValid(false)}
                 ref={pasRef}
-                inputOtherProps={{ required: true }}
+                inputOtherProps={{ placeholder: "MegaPasw03r+dD..." }}
               />
             </div>
-            <input type="submit" onClick={async () => await onSubmit()} />
+            <input
+              type="submit"
+              onClick={async () => {
+                if (emailIsValid && pasIsValid) await onSubmit();
+              }}
+            />
             <div>
               <p>
                 If you don't have an account,{" "}

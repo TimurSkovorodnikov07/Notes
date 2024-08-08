@@ -31,7 +31,9 @@ builder.Services.AddCors((opts) =>
 {
     opts.AddPolicy("defaultCorsPolicy", (builder) =>
     {
-        builder.WithOrigins("http://localhost:3000/").AllowAnyHeader().AllowAnyMethod();
+        builder.WithOrigins("http://localhost:3000")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 builder.Services.AddAuthentication(auth =>
@@ -108,17 +110,20 @@ builder.Services.AddSingleton<ConnectionFactory>(new ConnectionFactory(
     .GetRequiredSection("UserSecrets:PostgresConnectionStr")
     .Get<string>()));
 builder.Services.AddSingleton<QueryCreaterService>();
-builder.Services.AddSingleton<UserService>();
-builder.Services.AddSingleton<NoteService>();
+builder.Services.AddSingleton<ValidationFilter>();
 
 builder.Services.AddSingleton<ITokenNameInCookies>(jwtOptions);
 builder.Services.AddSingleton<BaseEmailSenderService>();
-builder.Services.AddSingleton<JwtService>();
 builder.Services.AddSingleton<IHasher, HashingManagerService>();
 builder.Services.AddSingleton<IHashVerify, HashingManagerService>();
 
-builder.Services.AddScoped<ICodeCreator, CodeService>();
 
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<NoteService>();
+builder.Services.AddScoped<RefreshTokenService>();
+builder.Services.AddScoped<JwtService>();
+
+builder.Services.AddScoped<ICodeCreator, CodeService>();
 builder.Services.AddScoped<IEmailSender, EmailSenderByYandexService>();
 builder.Services.AddScoped<IEmailVerify, EmailVerifyService>();
 
@@ -139,13 +144,7 @@ else
     app.UseHttpsRedirection();
 }
 app.UseRouting();
-app.UseCors((opts) => { opts.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin(); });
-// app.UseCors((opts) =>
-//     opts.WithOrigins("http://localhost:3000/")
-//      .AllowAnyHeader()
-//         .AllowAnyMethod()
-//             .WithExposedHeaders());
-
+app.UseCors("defaultCorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 

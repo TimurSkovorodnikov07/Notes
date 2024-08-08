@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 
 export default function RedirectToAuthPages({ props }: any) {
   const authCon = useContext(authContext);
-  return authCon.authenticated ? (
+  return authCon.isAuthenticated ? (
     { ...props.children }
   ) : (
     <Navigate to={"/login"}></Navigate>

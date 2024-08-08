@@ -5,17 +5,20 @@ import INoteChangeDto from "../interfaces/dtos/INoteChangeDto";
 import { api } from "..";
 import { AxiosResponse } from "axios";
 import Note from "../classes/Note";
+import INoteGetResponse from "../interfaces/responses/INotesGetResponse";
 
 export async function notesGet(
   params: INotesGetParams
-): Promise<AxiosResponse<Note[]>> {
-  const path = `/notes?from=${isNaN(params.from ?? 0) ? "" : params.from}&to=${
-    isNaN(params.to ?? 0) ? "" : params.to
-  }&sortType=${params.sortType}&search=${params.search}`;
-  return api.get<Note[]>(path).then();
+): Promise<AxiosResponse<INoteGetResponse>> {
+  let path = `/notes?from=${params.from}&to=${params.to}&sortType=${params.sortType}`;
+  path +=
+    params.search != undefined || params.search != ""
+      ? `&search=${params.search}`
+      : "";
+  return api.get<INoteGetResponse>(path).then();
 }
 
-export async function noteGet(id: number): Promise<AxiosResponse<Note>> {
+export async function noteGet(id: string): Promise<AxiosResponse<Note>> {
   return api.get<Note>(`/notes/${id}`).then();
 }
 
@@ -24,12 +27,12 @@ export async function noteCreate(note: INoteDto): Promise<AxiosResponse<void>> {
   return api.post(`/notes/`, objectToFormConverter(note)).then();
 }
 
-export async function noteRemove(id: number): Promise<AxiosResponse<void>> {
+export async function noteRemove(id: string): Promise<AxiosResponse<void>> {
   return api.delete(`/notes/${id}`).then();
 }
 
 export async function noteUpdate(
   note: INoteChangeDto
 ): Promise<AxiosResponse<void>> {
-  return api.put(`/notes/${note.Id}`, objectToFormConverter(note)).then();
+  return api.put(`/notes`, objectToFormConverter(note)).then();
 }

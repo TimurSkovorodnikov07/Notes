@@ -13,12 +13,18 @@ export default function AuthenticationMiddleware(props: any) {
   const refreshToken = Cookies.get(refreshTokenInCookies);
 
   const authCon = useContext(authContext);
-  authCon.authenticated = false;
-  useContext(accessTokenContext).token = accessToken ?? "";
-  useContext(refreshTokenContext).token = refreshToken ?? "";
 
-  if (accessToken != undefined && refreshToken != undefined)
-    authCon.authenticated = true;
+  useContext(accessTokenContext).accessToken = accessToken ?? "";
+  useContext(refreshTokenContext).refreshToken = refreshToken ?? "";
+
+  if (
+    (accessToken != undefined || accessToken != "") &&
+    (refreshToken != undefined || refreshToken != "")
+  ) {
+    authCon.isAuthenticated = true;
+  } else {
+    authCon.isAuthenticated = false;
+  }
 
   return <>{props.children}</>;
 }

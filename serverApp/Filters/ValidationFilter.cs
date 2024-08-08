@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-public class ValidationFilterAttribute : Attribute, IActionFilter
+public class ValidationFilter : IActionFilter
 {
+    public ValidationFilter(ILogger<ValidationFilter> logger)
+    {
+        _logger = logger;
+    }
+    private readonly ILogger<ValidationFilter> _logger;
     public void OnActionExecuted(ActionExecutedContext context)
     {
     }
@@ -13,7 +17,19 @@ public class ValidationFilterAttribute : Attribute, IActionFilter
         //Executing выполняетться до, а после Executed
         //https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions-1/controllers-and-routing/understanding-action-filters-cs
 
-        if (context.ModelState.IsValid == false)
+        if (!context.ModelState.IsValid)
+        {
+            _logger.LogError("Model is valid");
             context.Result = new BadRequestResult();
+        }
+    }
+}
+
+[AttributeUsage(AttributeTargets.Method)]
+public class ValidationFilterAttribute : ServiceFilterAttribute
+{
+    public ValidationFilterAttribute() : base(typeof(ValidationFilter))
+    {
+
     }
 }
