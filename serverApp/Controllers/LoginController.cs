@@ -162,8 +162,12 @@ public class LoginController : ControllerBase
         {
             await _userService.EmailVerUpdate(findUser.Id, true);
             var tokens = await TokensCreate(findUser);
+            _logger.LogCritical(tokens.RefreshToken);
 
-            var res = (await _refreshService.GetUser(tokens.RefreshToken)) is null
+            var refreshToken = await _refreshService.GetRefresh(findUser.Id);//Поздравет МЕНЯ!!! Я долбоеб 100% ый тк ищу юзера по ЕБАННОМУ НОВОМУ ТОКЕНУ НАХУЙ!! КОторого нету в бд
+            //ДУмал даппер накурился(тк я сначало проверял на сайте(я значит я его тут создавал, а потом уже по созданому искал)) и не поинмал что за хуйня
+            //Я даун
+            var res = refreshToken is null
                 ? await _refreshService.Add(findUser.Id, tokens.RefreshToken)
                 : await _refreshService.UpdateToken(findUser.Id, tokens.RefreshToken);
 
@@ -179,17 +183,18 @@ public class LoginController : ControllerBase
     // ASP.NET Core использовать форматировщик ввода для привязки предоставленного JSON (или XML) к модели
     //БЛЯТЬ, короче, там нужны кастомные типы, то есть странно, но с refresh-ом в json этот не удет соединяться, тк не в кастом типе
     {
-        var user = await _jwtService.GetUserFromRefreshToken(query.RefreshToken);
+        var userId = await _refreshService.RefreshTokenVerifyAndGetUserId(query.RefreshToken);
+        UserEntity? user = userId is not null ? (await _userService.GetUser(userId.Value)) : null;
 
-        if (user is not null)// && RefreshTokenService.RefreshTokenVerify(refresh)
+        if (user is not null)
         {
             var tokens = await TokensCreate(user);
 
             await _refreshService.UpdateToken(user.Id, tokens.RefreshToken);
             return Ok(tokens);
         }
-
-        return NotFound("Refresh token not found");
+        //Я хз что возвращать если рефрешь токен слох, вроде это:
+        return BadRequest();
     }
     [NonAction]
     private async Task<Tokens> TokensCreate(UserEntity user)

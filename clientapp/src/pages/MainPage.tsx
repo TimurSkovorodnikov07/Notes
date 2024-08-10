@@ -16,7 +16,7 @@ export default function MainPage() {
   const [search, setSearch] = useState("");
   const [from, setFrom] = useState(0);
 
-  const defaultPagin: number = 10;
+  const defaultPagin: number = 8;
   const [totalNotes, setTotalNotes] = useState(0);
   const [pagin, setPagin] = useState(defaultPagin);
 
@@ -96,7 +96,7 @@ export default function MainPage() {
           <Notes
             noteList={notes}
             ulChildren={""}
-            liChildren={{ class: "note" }}
+            liChildren={{ className: "note" }}
             notesListChangeFun={async () => await getNotesQuery()}
           />
         ) : (

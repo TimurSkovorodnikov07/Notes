@@ -65,13 +65,10 @@ public class JwtService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
-    public async Task<UserEntity?> GetUserFromRefreshToken(string refresh)
+    public bool RefreshTokenIsValid(string refreshToken, Guid userId)
     {
-        var token = new JwtSecurityTokenHandler().ReadJwtToken(refresh);
-        var userId = token?.Claims?.First(c => c.Type == "userId")?.Value;
-
-        return userId is not null
-        ? await _userService.GetUser(new Guid(userId))
-        : null;
+        var token = new JwtSecurityTokenHandler().ReadJwtToken(refreshToken);
+        return token.ValidTo > DateTime.UtcNow &
+         token.Claims?.First(c => c.Type == "userId")?.Value == userId.ToString();
     }
 }

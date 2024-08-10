@@ -41,7 +41,7 @@ export default function NoteCreateModalWindow({
         <InputComponent
           id="nameInput"
           inputType="text"
-          invalidText={"Name is empty"}
+          invalidText={"The name must be greater than 120 or empty"}
           validatorFun={noteNameValiadator}
           validatedFun={() => setNameIsValid(true)}
           invalidatedFun={() => setNameIsValid(false)}
@@ -54,6 +54,7 @@ export default function NoteCreateModalWindow({
         <TextAreaComponent
           id="descriptionId"
           ref={refToDescription}
+          invalidText={"The description must be greater than 5000"}
           labelOtherProps={labelChildrens}
           textareaOtherProps={{
             placeholder: "Description...",
