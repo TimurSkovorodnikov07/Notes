@@ -45,6 +45,9 @@ api.interceptors.response.use(
             RefreshToken: refresh ?? "",
           })
           .then();
+
+        console.log(response);
+
         if (response.status == 200) {
           localStorage.setItem(
             accessTokenInLocalStorage,
@@ -56,8 +59,8 @@ api.interceptors.response.use(
         throw new Error("");
       } catch (er) {
         console.error(er);
-        Cookies.remove(refreshTokenInCookies);
         localStorage.removeItem(accessTokenInLocalStorage);
+        Cookies.remove(refreshTokenInCookies);
       }
     }
     throw error;

@@ -26,7 +26,9 @@ export default function LoginPage() {
   const [emailIsValid, setEmailIsValid] = useState(false);
   const [pasIsValid, setPasIsValid] = useState(false);
 
+  const [sent, setSent] = useState(false); //Чтобы юзер не отправил дважды запрос
   async function onSubmit() {
+    setSent(true);
     let resStatus = { text: "", status: 0 };
     let resData;
     try {
@@ -37,7 +39,7 @@ export default function LoginPage() {
       resData = result.data;
       resStatus = { text: result.statusText, status: result.status };
     } catch (error: any) {
-      console.log(error);
+      setSent(false);
 
       resStatus.status = error.response.status;
       resStatus.text = error.response.statusText;
@@ -111,7 +113,7 @@ export default function LoginPage() {
             <input
               type="submit"
               onClick={async () => {
-                if (emailIsValid && pasIsValid) await onSubmit();
+                if (emailIsValid && pasIsValid && !sent) await onSubmit();
               }}
             />
             <div>

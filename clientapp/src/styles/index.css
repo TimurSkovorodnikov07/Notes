@@ -8,7 +8,6 @@ footer, header
   display: flex; /* Используем Flexbox для выравнивания элементов */
   justify-content: space-between; /* Размещает элементы по краям контейнера */
   align-items: center; /* Выравнивает элементы по вертикали по центру */
-
 }
 
 input, button, textarea

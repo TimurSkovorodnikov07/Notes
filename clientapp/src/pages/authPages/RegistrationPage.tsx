@@ -31,7 +31,10 @@ export default function RegistrationPage() {
   const [emailIsValid, setEmailIsValid] = useState(false);
   const [pasIsValid, setPasIsValid] = useState(false);
 
+  const [sent, setSent] = useState(false); //Чтобы юзер не отправил дважды запрос
   async function onSubmit() {
+    setSent(true);
+
     let resultData;
     let resultStatus = { text: "", status: 0 };
     try {
@@ -43,6 +46,7 @@ export default function RegistrationPage() {
       resultStatus = { text: result.statusText, status: result.status };
       resultData = result.data;
     } catch (error: any) {
+      setSent(false);
       resultStatus.status = error.response.status;
       resultStatus.text = error.response.statusText;
     }
@@ -146,7 +150,8 @@ export default function RegistrationPage() {
             <input
               type="submit"
               onClick={async () => {
-                if (nameIsValid && emailIsValid && pasIsValid) await onSubmit();
+                if (nameIsValid && emailIsValid && pasIsValid && !sent)
+                  await onSubmit();
               }}
             />
             <div>

@@ -38,15 +38,23 @@ export default function EmailVerify({
   async function emailVer(code: string) {
     //Поздравте меня, я даун, вметос того чтобы покопаться что за хуйня этот then()
     //Я забил и думал дохуя знаю, ну и короче проебал часа 2
-    const result = await emailVerify(userId, code);
-    const tokens = result?.data;
-
-    if (tokens != undefined && result?.status == 200) {
-      localStorage.setItem(accessTokenInLocalStorage, tokens.accessToken);
-      Cookies.set(refreshTokenInCookies, tokens.refreshToken);
+    let status = { code: 0, text: "" };
+    let data: any;
+    try {
+      const result = await emailVerify(userId, code);
+      status = { code: result.status, text: result.statusText };
+      data = result.data;
+    } catch (error: any) {
+      status = { code: error.response.status, text: error.response.statusText };
+      data = undefined;
+    }
+    if (data != undefined && status.code == 200) {
+      localStorage.setItem(accessTokenInLocalStorage, data?.accessToken);
+      Cookies.set(refreshTokenInCookies, data?.refreshToken);
       navigate("/");
+      setErrorText("");
     } else {
-      setErrorText("Incorrect code");
+      setErrorText("Incorect code");
     }
   }
   async function resend() {
@@ -81,7 +89,6 @@ export default function EmailVerify({
               if (parseInt(event?.target?.value?.length ?? "0") != codeLength)
                 setErrorText(`The code must be ${codeLength} characters long`);
               else {
-                setErrorText("");
                 emailVer(event?.target?.value ?? "");
               }
             },
@@ -89,7 +96,9 @@ export default function EmailVerify({
         />
       </div>
       <div>
-        <p id="errorText">{errorText}</p>
+        <p id="error-text" className="error-text">
+          {errorText}
+        </p>
         <p>
           If the code has not yet been sent to your email address, check the
           quality The Internet and whether you entered your email address
