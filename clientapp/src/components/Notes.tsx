@@ -1,6 +1,6 @@
 import INotesPageParams from "../interfaces/parametrs/INotesPageParams";
-import NoteChangeModelWindow from "./NoteChangeModelWindow";
-import NoteRemoveModelWindow from "./NoteRemoveModelWindow";
+import NoteChangeModalWindow from "./NoteChangeModalWindow";
+import NoteRemoveModalWindow from "./NoteRemoveModalWindow";
 
 export default function Notes({
   noteList,
@@ -17,11 +17,14 @@ export default function Notes({
               <p>Name: {x.name}</p>
               <p>{x.description}</p>
 
-              <NoteChangeModelWindow
+              <NoteChangeModalWindow
                 changeableNote={x}
                 notesListChangeFun={notesListChangeFun}
+                inputChildrens={{
+                  className: "custom-input",
+                }}
               />
-              <NoteRemoveModelWindow
+              <NoteRemoveModalWindow
                 removableNote={x}
                 notesListChangeFun={notesListChangeFun}
               />

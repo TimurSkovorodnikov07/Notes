@@ -1,20 +1,20 @@
 import { useRef, useState } from "react";
-import "../styles/ModelWindows.css";
-import ModelWindow from "./ModelWindow";
+import "../styles/ModalWindows.css";
 import { InputComponent } from "./InputComponent";
 import { TextAreaComponent } from "./TextAreaComponent";
 import INoteChangeParams from "../interfaces/parametrs/INoteChangeParams";
 import { noteUpdate } from "../requests/notesRequests";
 import noteNameValiadator from "../validators/noteNameValiadator";
+import ModalWindow from "./ModalWindow";
 
-export default function NoteChangeModelWindow({
+export default function NoteChangeModalWindow({
   changeableNote,
   labelChildrens,
   inputChildrens,
   textAreaChildrens,
   notesListChangeFun,
 }: INoteChangeParams) {
-  const [modeWindowIsOpen, setOpenModeWindow] = useState(false);
+  const [modaWindowIsOpen, setOpenModaWindow] = useState(false);
   const refToName = useRef<HTMLInputElement>(null);
   const refToDescription = useRef<HTMLTextAreaElement>(null);
 
@@ -30,14 +30,14 @@ export default function NoteChangeModelWindow({
 
     if (result.status == 200) {
       notesListChangeFun?.();
-      setOpenModeWindow(false);
+      setOpenModaWindow(false);
     }
   }
 
-  return modeWindowIsOpen ? (
-    <ModelWindow
-      isOpen={modeWindowIsOpen}
-      onClosed={() => setOpenModeWindow(false)}
+  return modaWindowIsOpen ? (
+    <ModalWindow
+      isOpen={modaWindowIsOpen}
+      onClosed={() => setOpenModaWindow(false)}
     >
       <h2>Change note</h2>
       <div>
@@ -70,14 +70,17 @@ export default function NoteChangeModelWindow({
         />
       </div>
       <button
+        className="modal-button"
         onClick={async () => {
           if (nameIsValid) await onChange();
         }}
       >
         Change
       </button>
-    </ModelWindow>
+    </ModalWindow>
   ) : (
-    <button onClick={() => setOpenModeWindow(true)}>Change</button>
+    <button className="custom-input" onClick={() => setOpenModaWindow(true)}>
+      Change
+    </button>
   );
 }

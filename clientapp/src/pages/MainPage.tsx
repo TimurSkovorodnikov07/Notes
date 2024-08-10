@@ -5,7 +5,8 @@ import Note from "../classes/Note";
 import { authContext } from "../contexts";
 import { Link } from "react-router-dom";
 import { InputComponent } from "../components/InputComponent";
-import NoteCreateModelWindow from "../components/NoteCreateModelWindow";
+import NoteCreateModalWindow from "../components/NoteCreateModalWindow";
+import "../styles/MainPage.css";
 
 export default function MainPage() {
   const authCon = useContext(authContext);
@@ -51,7 +52,7 @@ export default function MainPage() {
   return authCon.isAuthenticated ? (
     <>
       <div>
-        <NoteCreateModelWindow
+        <NoteCreateModalWindow
           notesListChangeFun={async () => await getNotesQuery()}
         />
       </div>
@@ -59,11 +60,12 @@ export default function MainPage() {
         <InputComponent
           id="paginInput"
           inputType="number"
-          labelText="The number of displayed tasks:"
+          labelText="The number of displayed tasks: "
           beforeValidationFun={(e: any) =>
             setPagin(parseInt(e.currentTarget.value))
           }
           inputOtherProps={{
+            className: "pagin-input",
             min: 3,
             max: 15,
             defaultValue: defaultPagin,
@@ -76,6 +78,7 @@ export default function MainPage() {
           id="searchText"
           type="text"
           onChange={(e) => setSearch(e.target.value)}
+          className={"custom-input"}
         />
       </div>
       <div>
@@ -93,7 +96,7 @@ export default function MainPage() {
           <Notes
             noteList={notes}
             ulChildren={""}
-            liChildren={""}
+            liChildren={{ class: "note" }}
             notesListChangeFun={async () => await getNotesQuery()}
           />
         ) : (
@@ -102,17 +105,23 @@ export default function MainPage() {
       </div>
       <div className="otherPages">
         {from - pagin >= 0 ? (
-          <button onClick={() => pagination(-1)}>Prev</button>
+          <button className={"custom-input"} onClick={() => pagination(-1)}>
+            Prev
+          </button>
         ) : (
           <></>
         )}
         {from + pagin < totalNotes ? (
-          <button onClick={() => pagination(1)}>Next</button>
+          <button className={"custom-input"} onClick={() => pagination(1)}>
+            Next
+          </button>
         ) : (
           <></>
         )}
         {from + pagin * 2 < totalNotes ? (
-          <button onClick={() => pagination(2)}>Next x2</button>
+          <button className={"custom-input"} onClick={() => pagination(2)}>
+            Next x2
+          </button>
         ) : (
           <></>
         )}

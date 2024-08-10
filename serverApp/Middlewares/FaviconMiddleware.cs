@@ -1,7 +1,7 @@
 public class FaviconMiddleware
 
 {
-    public const string PATHTOFAVICON = "/home/timur/Desktop/FullStackProj1/serverApp/wwwroot/favicon.ico";
+    public const string PATHTOFAVICON = "/home/timur/Desktop/repositories/NotesFullStackProj/serverApp/favicon.ico";
     private readonly RequestDelegate _next;
     public FaviconMiddleware(RequestDelegate next)
     {

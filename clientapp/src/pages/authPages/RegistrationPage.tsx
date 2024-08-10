@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import IStatusCodeAndText from "../../interfaces/IStatusCodeAndText";
 import EmailVerify from "../../components/EmailVerify";
 import userNameValidator from "../../validators/userNameValidator";
+import { AxiosError } from "axios";
 
 export default function RegistrationPage() {
   const [statusAndText, setStatusAndText] = useState<IStatusCodeAndText>({
@@ -31,23 +32,31 @@ export default function RegistrationPage() {
   const [pasIsValid, setPasIsValid] = useState(false);
 
   async function onSubmit() {
-    const result = await accountCreate({
-      Name: nameRef?.current?.value ?? "",
-      Email: emailRef?.current?.value ?? "",
-      Password: pasRef?.current?.value ?? "",
-    });
-    const data = result?.data;
+    let resultData;
+    let resultStatus = { text: "", status: 0 };
+    try {
+      const result = await accountCreate({
+        Name: nameRef?.current?.value ?? "",
+        Email: emailRef?.current?.value ?? "",
+        Password: pasRef?.current?.value ?? "",
+      });
+      resultStatus = { text: result.statusText, status: result.status };
+      resultData = result.data;
+    } catch (error: any) {
+      resultStatus.status = error.response.status;
+      resultStatus.text = error.response.statusText;
+    }
 
-    switch (result?.status) {
+    switch (resultStatus.status) {
       case 200:
         setStatusAndText({ status: 200, text: "OK" });
-        setUserId(data.userId);
-        setCodeLength(data.codeLength);
-        setCodeDiedAfterSeconds(data.codeDiedAfterSeconds);
+        setUserId(resultData?.userId ?? "");
+        setCodeLength(resultData?.codeLength ?? 0);
+        setCodeDiedAfterSeconds(resultData?.codeDiedAfterSeconds ?? 0);
 
         break;
       case 400:
-        setStatusAndText({ status: 400, text: result.statusText });
+        setStatusAndText({ status: 400, text: resultStatus.text });
         console.error(
           "Даун, у тебя клиент имеет возможность отправлять не валдиные данные, потому 400 код получаешь"
         );
@@ -59,7 +68,10 @@ export default function RegistrationPage() {
         });
         break;
       default:
-        console.error("The client cannot process this code: ", result?.status);
+        console.error(
+          "The client cannot process this code: ",
+          resultStatus.status
+        );
         break;
     }
   }
@@ -84,7 +96,7 @@ export default function RegistrationPage() {
             </div>
             {statusAndText.status == 409 ? (
               <div>
-                <h2 className="error">{statusAndText.text}</h2>
+                <h2 className="error-text">{statusAndText.text}</h2>
               </div>
             ) : (
               <></>

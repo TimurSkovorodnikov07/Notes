@@ -1,5 +1,5 @@
 import { refreshTokenInCookies } from "../data/cookiesName";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import {
   accessTokenContext,
   authContext,
@@ -7,8 +7,11 @@ import {
 } from "../contexts";
 import { accessTokenInLocalStorage } from "../data/localStorageItemName";
 import Cookies from "js-cookie";
+import IAuthenticationMiddlewareParams from "../interfaces/parametrs/IAuthenticationMiddlewareParams";
 
-export default function AuthenticationMiddleware(props: any) {
+export default function AuthenticationMiddleware({
+  children,
+}: IAuthenticationMiddlewareParams) {
   const accessToken = localStorage.getItem(accessTokenInLocalStorage);
   const refreshToken = Cookies.get(refreshTokenInCookies);
 
@@ -18,13 +21,16 @@ export default function AuthenticationMiddleware(props: any) {
   useContext(refreshTokenContext).refreshToken = refreshToken ?? "";
 
   if (
-    (accessToken != undefined || accessToken != "") &&
-    (refreshToken != undefined || refreshToken != "")
+    accessToken == undefined ||
+    accessToken == "" ||
+    refreshToken == undefined ||
+    refreshToken == ""
   ) {
-    authCon.isAuthenticated = true;
-  } else {
+    localStorage.removeItem(accessTokenInLocalStorage);
     authCon.isAuthenticated = false;
+  } else {
+    authCon.isAuthenticated = true;
   }
-
-  return <>{props.children}</>;
+  console.log(authCon.isAuthenticated);
+  return children;
 }

@@ -3,9 +3,9 @@ import { InputComponent } from "./InputComponent";
 import { TextAreaComponent } from "./TextAreaComponent";
 import { noteCreate } from "../requests/notesRequests";
 import noteNameValiadator from "../validators/noteNameValiadator";
-import ModelWindow from "./ModelWindow";
+import ModalWindow from "./ModalWindow";
 
-export default function NoteCreateModelWindow({
+export default function NoteCreateModalWindow({
   labelChildrens,
   inputChildrens,
   textAreaChildrens,
@@ -15,7 +15,7 @@ export default function NoteCreateModelWindow({
   const refToDescription = useRef<HTMLTextAreaElement>(null);
 
   const [nameIsValid, setNameIsValid] = useState(false);
-  const [modeWindowIsOpen, setOpenModeWindow] = useState(false);
+  const [modaWindowIsOpen, setOpenModaWindow] = useState(false);
 
   async function create() {
     try {
@@ -31,10 +31,10 @@ export default function NoteCreateModelWindow({
     }
   }
 
-  return modeWindowIsOpen ? (
-    <ModelWindow
-      isOpen={modeWindowIsOpen}
-      onClosed={() => setOpenModeWindow(false)}
+  return modaWindowIsOpen ? (
+    <ModalWindow
+      isOpen={modaWindowIsOpen}
+      onClosed={() => setOpenModaWindow(false)}
     >
       <h2>Create new note</h2>
       <div>
@@ -52,27 +52,30 @@ export default function NoteCreateModelWindow({
       </div>
       <div>
         <TextAreaComponent
-          id="discriptionId"
+          id="descriptionId"
           ref={refToDescription}
           labelOtherProps={labelChildrens}
           textareaOtherProps={{
-            placeholder: "Discription...",
+            placeholder: "Description...",
             ...textAreaChildrens,
           }}
         />
       </div>
       <button
+        className="modal-button"
         onClick={() => {
           if (nameIsValid) {
             create();
-            setOpenModeWindow(false);
+            setOpenModaWindow(false);
           }
         }}
       >
         Create
       </button>
-    </ModelWindow>
+    </ModalWindow>
   ) : (
-    <button onClick={() => setOpenModeWindow(true)}>Create</button>
+    <button className="custom-input" onClick={() => setOpenModaWindow(true)}>
+      Create
+    </button>
   );
 }

@@ -7,10 +7,12 @@ export const TextAreaComponent = forwardRef<
 >((props, ref) => {
   const [noValidText, setNoValidText] = useState<string>("");
 
-  function onChangeFun(element: any): void {
+  function onChangeFun(
+    e: React.ChangeEvent<HTMLTextAreaElement | undefined>
+  ): void {
     if (props.validatorFun == null && noValidText == null) return;
 
-    if (props.validatorFun?.(element.target.value)) {
+    if (props.validatorFun?.(e.target.value)) {
       setNoValidText("");
     } else {
       setNoValidText(noValidText);
@@ -25,8 +27,13 @@ export const TextAreaComponent = forwardRef<
       <textarea
         id={props.id}
         ref={ref}
-        onChange={onChangeFun}
+        onChange={(e) => onChangeFun(e)}
         {...props.textareaOtherProps}
+        onResize={(e) => {
+          e.currentTarget.style.height = "auto";
+          e.currentTarget.style.height =
+            e.currentTarget.scrollHeight.toString() + "px";
+        }}
       />
       <span>{noValidText}</span>
     </div>

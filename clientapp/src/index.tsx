@@ -1,23 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import axios from "axios";
 import { accessTokenInLocalStorage } from "./data/localStorageItemName";
 import AuthenticationMiddleware from "./middlwares/AuthenticationMiddleware";
-import { BrowserRouter, Link } from "react-router-dom";
+import { BrowserRouter, Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { refreshTokenInCookies } from "./data/cookiesName";
 import ITokens from "./interfaces/ITokens";
+import { authContext } from "./contexts";
+import "./styles/index.css";
 export const apiUrl = "http://localhost:4505/api";
 export const api = axios.create({
   withCredentials: false,
   baseURL: apiUrl,
-  headers: {
-    "Access-Control-Allow-Headers": "*",
-    "Access-Control-Allow-Methods": "*",
-  },
 });
 
 api.interceptors.request.use((conf) => {
@@ -43,33 +40,25 @@ api.interceptors.response.use(
       try {
         originalReq._isRetry = true; //Нужно isRetry проверка чтобы не сделать бесконечный цикл где хочешь избавиться от 401 но в итоге опять его получаешь(если сервак писал даун)
         const refresh = Cookies.get(refreshTokenInCookies);
-        console.log(refresh);
         const response = await api
           .put<ITokens>("/tokensupdate", {
             RefreshToken: refresh ?? "",
           })
           .then();
-
-        console.log(response);
-
         if (response.status == 200) {
           localStorage.setItem(
             accessTokenInLocalStorage,
             response.data.accessToken
           );
           Cookies.set(refreshTokenInCookies, response.data.refreshToken);
-
           return api.request(originalReq);
-        } else if (response.status) {
-          //Если рефреш токен не валдный пусть юзер пиздует заходиться заново.
-          //Тут токены становяться пустыми, а если они пустые то миддливеер аут сделает IsAuth = false
-          console.error(
-            "Рефреш токен не валидный либо его нет в бд, иди в login"
-          );
-          localStorage.removeItem(accessTokenInLocalStorage);
-          Cookies.remove(refreshTokenInCookies);
         }
-      } catch (er) {}
+        throw new Error("");
+      } catch (er) {
+        console.error(er);
+        Cookies.remove(refreshTokenInCookies);
+        localStorage.removeItem(accessTokenInLocalStorage);
+      }
     }
     throw error;
   }
@@ -82,35 +71,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthenticationMiddleware>
-        <header className="App-header">
-          <h1>Notes</h1>
-          <nav className="menu">
-            <ul>
-              <li>
-                <Link to="/">Notes(Home)</Link>
-              </li>
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-              <li>
-                <Link to="/registration">Registration</Link>
-              </li>
-            </ul>
-          </nav>
-        </header>
-
-        <div className="App-body">
-          <div>
-            <App />
-          </div>
-        </div>
-
-        <footer className="App-footer">
-          <div>
-            <Link to="/policyandprivacy">Policy and Privacy</Link>
-          </div>
-          <div>Copyright © 2024 Notes</div>
-        </footer>
+        <App />
       </AuthenticationMiddleware>
     </BrowserRouter>
   </React.StrictMode>

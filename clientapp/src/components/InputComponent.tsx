@@ -1,6 +1,6 @@
 import { useState, forwardRef } from "react";
 import IInputComponentParams from "../interfaces/parametrs/IInputComponentParams";
-import "../index.css";
+import "../styles/index.css";
 //forwardRef это компонент с ref атрибутом, почему нельзя за пределами одного компонента передать в другой ref из первого? Да хуй его знает, под копотом хуйня 100%
 //Ну и вот, forwardRef позволяет сзодать ссылку в первом комп и юзать ее в втором комп.
 //Стоит заметить, ебанный typescript выебываеться, потому при создании ссылки у нее в джинериках должен быьть тип HTMLElement-а, в какой тип элемента ссылаться
@@ -11,7 +11,9 @@ export const InputComponent = forwardRef<
 >((params, ref) => {
   const [noValidText, setNoValidText] = useState<string>("");
 
-  function onChangeFun(e: any): void {
+  function onChangeFun(
+    e: React.ChangeEvent<HTMLInputElement | undefined>
+  ): void {
     params.beforeValidationFun?.(e);
     if (params.validatorFun == null && noValidText == null) return;
 

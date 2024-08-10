@@ -163,7 +163,10 @@ public class LoginController : ControllerBase
             await _userService.EmailVerUpdate(findUser.Id, true);
             var tokens = await TokensCreate(findUser);
 
-            await _refreshService.Add(findUser.Id, tokens.RefreshToken);
+            var res = (await _refreshService.GetUser(tokens.RefreshToken)) is null
+                ? await _refreshService.Add(findUser.Id, tokens.RefreshToken)
+                : await _refreshService.UpdateToken(findUser.Id, tokens.RefreshToken);
+
             return Ok(tokens);
         }
         return BadRequest();

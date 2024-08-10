@@ -3,19 +3,46 @@
     top: 50%; /* размещаем модальное окно посередине вертикали */
     left: 50%; /* размещаем модальное окно посередине горизонтали */
     transform: translate(-50%, -50%); /* центрируем модальное окно */
-    background-color: #fff; /* цвет фона модального окна */
     padding: 20px; /* отступы внутри модального окна */
     border-radius: 8px; /* скругляем углы модального окна */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* тень для модального окна */
+
+    background-color: #00f3651c;
     z-index: 1000; /* задаем высокий z-index, чтобы модальное окно было поверх остального контента */
   }
-  
+  .modal-content input,textarea,button
+  {
+    background-color: rgba(0, 0, 0, 0);
+    border-bottom: 1px solid  rgb(10, 153, 93);
+
+  }
+  .modal-content input:focus, button:focus, textarea:focus
+  {
+    outline: none;/*По дефолту браузера добавляют рамку при фокусе*/
+    box-shadow: 0px 0px 7px  rgb(10, 153, 93);
+    border-bottom: none;
+  }
 .modal-wrapper {
     position: fixed; /* фиксированное позиционирование для wrappers */
     top: 0;
     left: 0;
     width: 100%; /* распространяемся на всю ширину экрана */
     height: 100%; /* распространяемся на всю высоту экрана */
-    background-color: rgba(0, 0, 0, 0.5); /* полупрозрачный черный цвет фона */
+    background-color: rgba(0, 0, 0, 0.7); /* полупрозрачный черный цвет фона */
+
+    backdrop-filter: blur(4px);
     z-index: 900; /* z-index ниже, чем у модального окна, чтобы оставался под ним */
  }
+ .modal-close-button
+ {
+  position: absolute;
+  text-align:right;
+  width: 25px;
+  height: 25px;
+  top:15px;
+  right: 15px;
+  border-bottom: none;
+ }
+ .modal-button
+ {
+background-color: rgba(15, 160, 99, 0.404);
+}

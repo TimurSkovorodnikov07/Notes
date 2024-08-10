@@ -1,0 +1,129 @@
+
+footer, header
+{
+  background-color: #00f3651c;
+
+  width: 100%; 
+  box-sizing: border-box; /* Включить границы и отступы в общую ширину */
+  display: flex; /* Используем Flexbox для выравнивания элементов */
+  justify-content: space-between; /* Размещает элементы по краям контейнера */
+  align-items: center; /* Выравнивает элементы по вертикали по центру */
+
+}
+
+input, button, textarea
+{
+  font-size: 2vw;
+  width: 40vw;
+  height: 5vh;
+  border: none;
+  color: rgb(255, 247, 173);
+  background-color: #00bd2f10;
+  text-align: center;
+  margin-bottom: 10px;
+}
+input:focus, button:focus, textarea:focus
+{
+  outline: none;/*По дефолту браузера добавляют рамку при фокусе*/
+  box-shadow: 0px 0px 5px  rgb(0, 192, 250);
+  border-bottom: none;
+}
+.custom-input{
+  margin: 10px 10px ;
+  background-color: #00ff4010;
+}
+.custom-input:focus{
+  box-shadow: 0px 0px 5px  rgb(0, 192, 250);
+}
+input::placeholder,
+textarea::placeholder {
+    color: #87ffc142; /* Устанавливаем цвет текста-заполнителя, например, красный */
+}
+textarea
+{
+  width: 100%; /* Начальная ширина */
+  max-width: 90%; /* Максимальная ширина */
+  height: 100px; /* Высота */
+  overflow: hidden; /* Прячем прокрутку */
+  resize: vertical; /* Разрешаем изменение размера только по горизонтали */
+  transition: background-size 0.3s ease; /* Плавное изменение фона */
+  overflow: hidden;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background-image: url(/public/background.jpeg);
+  background-repeat: no-repeat; /* Не повторяет изображение */
+  background-attachment: fixed; /* Фиксирует фон относительно окна просмотра */
+  background-position:center;
+  background-size: auto;
+
+  font-size:  2vw;
+  color: rgb(255, 247, 173);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.app{
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 100vh;
+}
+.app-body {
+  font-size: 2vw;
+  padding: 10px 0px;
+  text-align: center;
+}
+.app-footer {
+  font-size: 1vw;
+
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+
+  padding: 1rem;
+  text-align: center;
+}
+a {
+  text-decoration: none; /* Убирает дефолтное от браузеров подчеркивание */
+  color: white;
+}
+a:visited {
+  color:  rgb(0, 255, 255);
+}
+a:hover {
+  border-bottom: 1.5px solid  rgb(183, 107, 255);
+  transition: 0.1s;
+}
+.error-text
+{
+  color: red;
+  background-color: #7700008c;
+}
+
+.menu
+{
+  height: 8vh;
+  padding: 15px 30px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+.menu-title
+{
+  color: white;
+}
+.menu-pages
+{
+  list-style: none; /* Убираем маркеры у списка */
+  display: flex; /* Выравнивание ссылок в строку */
+}
+.menu-page
+{
+  margin-left: 35px;
+}

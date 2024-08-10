@@ -27,30 +27,42 @@ export default function LoginPage() {
   const [pasIsValid, setPasIsValid] = useState(false);
 
   async function onSubmit() {
-    const result = await login({
-      Email: emailRef?.current?.value ?? "",
-      Password: pasRef?.current?.value ?? "",
-    });
-    const data = result?.data;
-    switch (result?.status) {
+    let resStatus = { text: "", status: 0 };
+    let resData;
+    try {
+      const result = await login({
+        Email: emailRef?.current?.value ?? "",
+        Password: pasRef?.current?.value ?? "",
+      });
+      resData = result.data;
+      resStatus = { text: result.statusText, status: result.status };
+    } catch (error: any) {
+      console.log(error);
+
+      resStatus.status = error.response.status;
+      resStatus.text = error.response.statusText;
+    }
+    switch (resStatus.status) {
       case 200:
         setStatusAndText({ status: 200, text: "OK" });
-        setUserId(data.userId);
-        setCodeLength(data.codeLength);
-        setCodeDiedAfterSeconds(data.codeDiedAfterSeconds);
+        setUserId(resData?.userId ?? "");
+        setCodeLength(resData?.codeLength ?? 0);
+        setCodeDiedAfterSeconds(resData?.codeDiedAfterSeconds ?? 0);
         break;
       case 400:
-        setStatusAndText({ status: 400, text: result.statusText });
+        setStatusAndText({ status: 400, text: resStatus.text });
         break;
       case 404:
-        setStatusAndText({ status: 404, text: result.statusText });
+        setStatusAndText({ status: 404, text: resStatus.text });
         break;
       default:
-        console.error("The client cannot process this code: ", result?.status);
+        console.error(
+          "The client cannot process this code: ",
+          resStatus.status
+        );
         break;
     }
   }
-
   const ren = () => {
     switch (statusAndText.status) {
       case 200:
@@ -68,9 +80,7 @@ export default function LoginPage() {
               <h2>Log in to your account to use our application</h2>
             </div>
             {statusAndText.status == 404 || statusAndText.status == 400 ? (
-              <div>
-                <h2 className="error">{statusAndText.text}</h2>
-              </div>
+              <div className="error-text">{statusAndText.text}</div>
             ) : (
               <></>
             )}

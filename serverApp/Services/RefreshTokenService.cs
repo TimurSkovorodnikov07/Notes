@@ -18,7 +18,7 @@ public class RefreshTokenService
     public async Task<bool> Add(Guid userId, string refreshToken)
     {
         using var dbCon = _factory.Create();
-        var sqlQuery = "INSERT INTO tokens VALUES (user_id, refresh_token) (@userIdParam, @refreshParam)";
+        var sqlQuery = "INSERT INTO tokens  (user_id, refresh_token) VALUES (@userIdParam, @refreshParam)";
 
         _logger.LogDebug(sqlQuery);
 
@@ -32,6 +32,17 @@ public class RefreshTokenService
         _logger.LogDebug(sqlQuery);
 
         return await dbCon.ExecuteAsync(sqlQuery, AddOrUpdateParams(userId, refreshToken)) >= 0;
+    }
+    public async Task<UserEntity?> GetUser(string refreshToken)
+    {
+        using var dbCon = _factory.Create();
+
+        string sqlQuery = @$"SELECT * FROM tokens WHERE refresh_token = @tokenParam ";
+
+        _logger.LogDebug(sqlQuery);
+
+        var users = await dbCon.QueryAsync<UserEntity>(sqlQuery, new { tokenParam = refreshToken });
+        return users.FirstOrDefault();
     }
     private object AddOrUpdateParams(Guid guid, string refreshToken)
     {
